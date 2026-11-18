@@ -2,16 +2,11 @@
 interface Props { slug: string; defaults: string }
 const { slug } = Astro.props;
 const assessmentRelated: Record<string,string> = {math:"maven-numerical-new",fruit:"flow-math",prob:"maven-probability-new",nextcard:"citadel-trading",cards:"sig-quantitative",fermi:"maven-interval",makeme:"maven-interval",etf:"sig-equity"};
-const hints: Record<string, string> = {
-  cards: "Play solo against two computer traders, or add friends and take turns making the market.",
-  makeme: "Play solo against an informed computer, or add friends for a rotating market.",
-};
 ---
 <section id="setup" class="setup-panel">
   <div class="setup-intro">
     
     <h2>Start a game.</h2>
-    <p>{hints[slug] || "Play solo or add friends."}</p>
   </div>
   <form id="setup-form" class="setup-form">
     <div>

@@ -5,7 +5,7 @@ const defaults = JSON.stringify({ rounds: 3, estimate_timer_ms: 30000, quote_tim
 ---
 <Layout title="Make Me a Market" subtitle="premium · solo with informed bot, or multiplayer">
   <h1>Make Me a Market</h1>
-  <details class="game-rules"><summary>How to play</summary><p class="rules">What is the hidden quantity worth? Quote a bid and ask within the spread limit. In solo mode, an informed computer trades against your prices. With friends, estimate first, then take turns making markets. Finish by answering questions about your cash and position.</p></details>
+  <details class="game-rules"><summary>How to play</summary><p class="rules">What is the hidden quantity worth? Quote a bid and ask within the spread limit. In solo mode, an informed computer trades against your prices. In multiplayer, everyone estimates first, then takes turns making markets. Finish by answering questions about your cash and position.</p></details>
   <SetupPanel slug="makeme" defaults={defaults} />
 </Layout>
 
