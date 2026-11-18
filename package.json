@@ -9,8 +9,8 @@
     "deploy:staging": "cf deploy --prebuilt --mode staging",
     "deploy:production": "cf deploy --prebuilt --mode production",
     "test:worker": "node --test worker/*.test.mjs",
-    "build:staging": "bun --cwd frontend run build && npm run build:worker && vite build --mode staging",
-    "build:production": "bun --cwd frontend run build && npm run build:worker && vite build --mode production",
+    "build:staging": "bun run --cwd frontend build && npm run build:worker && vite build --mode staging",
+    "build:production": "bun run --cwd frontend build && npm run build:worker && vite build --mode production",
     "test:wasm": "node --experimental-vm-modules scripts/smoke-wasm.mjs"
   },
   "devDependencies": {
