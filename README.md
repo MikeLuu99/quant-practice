@@ -54,4 +54,5 @@ just a final scalar.
 
 ## Docs
 
+- Staging: https://quant-practice-staging.trungducmic.workers.dev (auto-deploys on every push to `main`, after CI)
 - [Cloudflare Workers deployment](docs/cloudflare-workers.md) — Worker gateway, Durable Objects, CI
