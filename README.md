@@ -54,9 +54,4 @@ just a final scalar.
 
 ## Docs
 
-- [Assessments + games specification](market_making_games_specification.md) and
-  [assessment overlap](tradermath_assessments_specification_and_overlap.md)
-- [Trainers specification](tradermath_trainers_specification_and_overlap.md)
 - [Cloudflare Workers deployment](docs/cloudflare-workers.md) — Worker gateway, Durable Objects, CI
-
-All three are copied to the site's `/specifications/` downloads at build time.
