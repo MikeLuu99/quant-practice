@@ -271,3 +271,14 @@ details > summary + * { margin-top: 16px; }
 .field-note:empty { display: none; }
 @media(max-width:720px) { .topbar nav { justify-content: stretch; gap: 8px; } .topbar nav a { flex: 1; padding: 9px 8px; font-size: 15px; } }
 @media(max-width:380px) { .topbar nav { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); } }
+
+/* Past scores (localStorage, completed sessions only) */
+.past-scores { margin: 18px 0 0; padding: 14px 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--panel); }
+.past-scores h2 { margin: 0 0 10px; display: flex; align-items: center; justify-content: space-between; }
+.past-scores-clear { font-size: 13px; }
+.past-scores-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.past-scores-list li { display: grid; grid-template-columns: 130px 1fr; gap: 4px 12px; padding: 8px 0; border-bottom: 1px solid var(--line); font-size: 14px; }
+.past-scores-list li:last-child { border-bottom: none; }
+.past-scores-when { color: var(--muted); font: 13px/1.4 var(--font-mono); }
+.past-scores-score { font-weight: 600; }
+.past-scores-detail { grid-column: 2; color: var(--muted); font-size: 13px; }

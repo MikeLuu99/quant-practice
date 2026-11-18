@@ -1,4 +1,5 @@
 import { decisionKey, fmtClock } from "./logic";
+import { recordFinishedResult } from "./scores";
 
 export type ActionOutput = {
   accepted: boolean; reason?: string; server_sequence?: number; execution?: any;
@@ -161,9 +162,21 @@ export function mountBoard(opts: MountOptions): void {
         stopPolling();
         const res = await getResults(sid);
         if (request === requestNumber && ownGeneration === generation) showResultsBox(res.results);
+        saveScore(res.results);
       }
     },
   };
+  // Past scores persist per completed session; unfinished sessions are never
+  // recorded, and one session never produces two entries.
+  const savedSessions = new Set<string>();
+  function saveScore(res: any) {
+    if (savedSessions.has(sid)) return;
+    const entry = recordFinishedResult({ slug: opts.slug, sessionId: sid, me, finished, results: res });
+    if (entry) {
+      savedSessions.add(sid);
+      window.dispatchEvent(new CustomEvent("quant:scores-updated"));
+    }
+  }
   function showResultsBox(res: any) {
     results.hidden = false;
     results.innerHTML = "<h2>Session results</h2>";
@@ -252,7 +265,11 @@ export function mountBoard(opts: MountOptions): void {
     url.searchParams.delete("s"); url.searchParams.delete("me"); history.replaceState(null, "", url.toString());
   });
   document.getElementById("show-results")?.addEventListener("click", async () => {
-    try { showResultsBox((await getResults(sid)).results); }
+    try {
+      const res = (await getResults(sid)).results;
+      showResultsBox(res);
+      saveScore(res);
+    }
     catch (e) { notify((e as Error).message, true); }
   });
   document.getElementById("show-tape")?.addEventListener("click", async () => {

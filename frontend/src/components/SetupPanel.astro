@@ -27,6 +27,10 @@ const assessmentRelated: Record<string,string> = {math:"maven-numerical-new",fru
   </form>
 </section>
 {assessmentRelated[slug] && <p class="practice-related"><a class="btn sm" href={`/assessment/?profile=${assessmentRelated[slug]}`}>Related assessments ↗</a></p>}
+<section id="past-scores" class="past-scores" data-slug={slug} hidden aria-label="Past scores"></section>
+<script>
+  import "./past-scores";
+</script>
 <div id="action-notice" class="action-notice" role="status" aria-live="polite" hidden></div>
 <section id="board" aria-label="Game board" hidden></section>
 <section id="results" aria-label="Session results" hidden></section>
