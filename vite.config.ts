@@ -6,5 +6,4 @@ import {cloudflare} from '@cloudflare/vite-plugin';
 export default defineConfig({
  publicDir:'frontend/dist',
  plugins:[cloudflare()],
- build:{outDir:'worker/dist',emptyOutDir:true},
 });
