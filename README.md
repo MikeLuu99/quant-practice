@@ -5,6 +5,8 @@ trainers — **Go** backend API + **Astro** frontend, implemented from the marke
 games specification (November 2026). Unpublished site defaults are replaced with the
 spec's documented proposals.
 
+![Quant Practice home page](docs/screenshot-home.png)
+
 ## Quick start
 
 ```sh
