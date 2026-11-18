@@ -1,0 +1,1114 @@
+[
+  {
+    "spec_id": "A01",
+    "id": "mako-aptitude",
+    "company_id": "mako",
+    "company": "Mako Trading",
+    "title": "Aptitude",
+    "variant": "standard",
+    "question_count": 37,
+    "duration_ms": 900000,
+    "preview_count": 5,
+    "preview_duration_ms": 120000,
+    "response_mode": "single_choice",
+    "navigation": "forward_only",
+    "timer_mode": "global",
+    "item_time_ms": 0,
+    "families": [
+      "arithmetic",
+      "probability",
+      "reasoning",
+      "cube"
+    ],
+    "engines": [
+      "arithmetic",
+      "probability",
+      "reasoning",
+      "cube"
+    ],
+    "overlap": [
+      "math",
+      "fruit",
+      "prob",
+      "nextcard",
+      "cards"
+    ],
+    "score_origin": "proposed",
+    "navigation_origin": "proposed",
+    "content_origin": "original practice",
+    "notes": "A timed original practice bank using the published count and time budget.",
+    "aids": "Not established by the inspected public lobby; original practice uses no integrated calculator.",
+    "proposed": [
+      "Original generated questions and topic distribution; no private question bank is copied.",
+      "Scoring +1 correct, 0 wrong/blank; not a disclosed employer scoring rule.",
+      "Forward-only navigation with explicit skip; source navigation is unspecified."
+    ],
+    "unknown": [
+      "Exact question distribution, difficulty, and employer pass thresholds."
+    ],
+    "source": "https://www.tradermath.org/online-assessments/mako-trading/lobby",
+    "reviewed_on": "2026-11-17",
+    "manifest_version": "assessment-profiles-v1"
+  },
+  {
+    "spec_id": "A02",
+    "id": "mako-codility",
+    "company_id": "mako",
+    "company": "Mako Trading",
+    "title": "Round 2 · Codility",
+    "variant": "standard",
+    "question_count": 28,
+    "duration_ms": 1800000,
+    "preview_count": 3,
+    "preview_duration_ms": 300000,
+    "response_mode": "single_choice",
+    "navigation": "revisable",
+    "timer_mode": "global",
+    "item_time_ms": 0,
+    "families": [
+      "probability",
+      "advanced_probability",
+      "advanced_probability",
+      "probability",
+      "reasoning",
+      "arithmetic"
+    ],
+    "engines": [
+      "probability",
+      "reasoning",
+      "arithmetic"
+    ],
+    "overlap": [
+      "prob",
+      "nextcard",
+      "cards",
+      "math",
+      "fruit"
+    ],
+    "score_origin": "published practice",
+    "navigation_origin": "published",
+    "content_origin": "original practice",
+    "notes": "A timed original practice bank using the published count and time budget.",
+    "aids": "No calculator; pen and paper described.",
+    "proposed": [
+      "Original generated questions and topic distribution; no private question bank is copied."
+    ],
+    "unknown": [
+      "Exact question distribution, difficulty, and employer pass thresholds."
+    ],
+    "source": "https://www.tradermath.org/online-assessments/mako-trading/codility/lobby",
+    "reviewed_on": "2026-11-17",
+    "manifest_version": "assessment-profiles-v1"
+  },
+  {
+    "spec_id": "A03",
+    "id": "ctc-cognitive",
+    "company_id": "ctc",
+    "company": "Chicago Trading Company",
+    "title": "Cognitive Aptitude",
+    "variant": "standard",
+    "question_count": 50,
+    "duration_ms": 900000,
+    "preview_count": 7,
+    "preview_duration_ms": 120000,
+    "response_mode": "single_choice",
+    "navigation": "forward_only",
+    "timer_mode": "global",
+    "item_time_ms": 0,
+    "families": [
+      "arithmetic",
+      "verbal",
+      "logic",
+      "visual",
+      "clerical",
+      "chart"
+    ],
+    "engines": [
+      "arithmetic",
+      "reasoning"
+    ],
+    "overlap": [
+      "math",
+      "fruit"
+    ],
+    "score_origin": "proposed",
+    "navigation_origin": "proposed",
+    "content_origin": "original practice",
+    "notes": "A timed original practice bank using the published count and time budget.",
+    "aids": "Not established by the inspected public lobby; original practice uses no integrated calculator.",
+    "proposed": [
+      "Original generated questions and topic distribution; no private question bank is copied.",
+      "Scoring +1 correct, 0 wrong/blank; not a disclosed employer scoring rule.",
+      "Forward-only navigation with explicit skip; source navigation is unspecified."
+    ],
+    "unknown": [
+      "Exact question distribution, difficulty, and employer pass thresholds."
+    ],
+    "source": "https://www.tradermath.org/online-assessments/chicago-trading-company/lobby",
+    "reviewed_on": "2026-11-17",
+    "manifest_version": "assessment-profiles-v1"
+  },
+  {
+    "spec_id": "A04-C",
+    "id": "maven-numerical-classic",
+    "company_id": "maven",
+    "company": "Maven Securities",
+    "title": "Numerical",
+    "variant": "classic",
+    "question_count": 50,
+    "duration_ms": 300000,
+    "preview_count": 10,
+    "preview_duration_ms": 120000,
+    "response_mode": "single_choice",
+    "navigation": "forward_only",
+    "timer_mode": "global",
+    "item_time_ms": 0,
+    "families": [
+      "integer",
+      "fraction",
+      "decimal",
+      "percentage",
+      "power"
+    ],
+    "engines": [
+      "arithmetic"
+    ],
+    "overlap": [
+      "math",
+      "fruit"
+    ],
+    "score_origin": "proposed",
+    "navigation_origin": "proposed",
+    "content_origin": "original practice",
+    "notes": "A timed original practice bank using the published count and time budget.",
+    "aids": "Not established by the inspected public lobby; original practice uses no integrated calculator.",
+    "proposed": [
+      "Original generated questions and topic distribution; no private question bank is copied.",
+      "Scoring +1 correct, 0 wrong/blank; not a disclosed employer scoring rule.",
+      "Forward-only navigation with explicit skip; source navigation is unspecified."
+    ],
+    "unknown": [
+      "Exact question distribution, difficulty, and employer pass thresholds."
+    ],
+    "source": "https://www.tradermath.org/mental-math/maven-securities/math-test/realistic-test-mode/lobby",
+    "reviewed_on": "2026-11-17",
+    "manifest_version": "assessment-profiles-v1"
+  },
+  {
+    "spec_id": "A04-N",
+    "id": "maven-numerical-new",
+    "company_id": "maven",
+    "company": "Maven Securities",
+    "title": "Numerical",
+    "variant": "new",
+    "question_count": 50,
+    "duration_ms": 300000,
+    "preview_count": 10,
+    "preview_duration_ms": 60000,
+    "response_mode": "numeric",
+    "navigation": "forward_only",
+    "timer_mode": "global",
+    "item_time_ms": 0,
+    "families": [
+      "four_digit",
+      "four_digit",
+      "four_digit",
+      "integer",
+      "percentage",
+      "relation"
+    ],
+    "engines": [
+      "arithmetic"
+    ],
+    "overlap": [
+      "math",
+      "fruit"
+    ],
+    "score_origin": "proposed",
+    "navigation_origin": "proposed",
+    "content_origin": "original practice",
+    "notes": "A timed original practice bank using the published count and time budget. New Maven formats are based on candidate reports; retain both classic and new presets.",
+    "aids": "Tradermath describes no calculator or paper for the reported new employer format.",
+    "proposed": [
+      "Original generated questions and topic distribution; no private question bank is copied.",
+      "Scoring +1 correct, 0 wrong/blank; not a disclosed employer scoring rule.",
+      "Forward-only navigation with explicit skip; source navigation is unspecified."
+    ],
+    "unknown": [
+      "Exact question distribution, difficulty, and employer pass thresholds."
+    ],
+    "source": "https://www.tradermath.org/mental-math/maven-securities/math-test/new-format/lobby",
+    "reviewed_on": "2026-11-17",
+    "manifest_version": "assessment-profiles-v1"
+  },
+  {
+    "spec_id": "A05-C",
+    "id": "maven-sequences-classic",
+    "company_id": "maven",
+    "company": "Maven Securities",
+    "title": "Sequences",
+    "variant": "classic",
+    "question_count": 30,
+    "duration_ms": 360000,
+    "preview_count": 10,
+    "preview_duration_ms": 300000,
+    "response_mode": "single_choice",
+    "navigation": "forward_only",
+    "timer_mode": "global",
+    "item_time_ms": 0,
+    "families": [
+      "sequence"
+    ],
+    "engines": [
+      "sequences"
+    ],
+    "overlap": [],
+    "score_origin": "proposed",
+    "navigation_origin": "proposed",
+    "content_origin": "original practice",
+    "notes": "A timed original practice bank using the published count and time budget.",
+    "aids": "Not established by the inspected public lobby; original practice uses no integrated calculator.",
+    "proposed": [
+      "Original generated questions and topic distribution; no private question bank is copied.",
+      "Scoring +1 correct, 0 wrong/blank; not a disclosed employer scoring rule.",
+      "Forward-only navigation with explicit skip; source navigation is unspecified."
+    ],
+    "unknown": [
+      "Exact question distribution, difficulty, and employer pass thresholds."
+    ],
+    "source": "https://www.tradermath.org/sequences/maven-securities/sequence-test/realistic-test-mode/lobby",
+    "reviewed_on": "2026-11-17",
+    "manifest_version": "assessment-profiles-v1"
+  },
+  {
+    "spec_id": "A05-N",
+    "id": "maven-sequences-new",
+    "company_id": "maven",
+    "company": "Maven Securities",
+    "title": "Sequences",
+    "variant": "new",
+    "question_count": 20,
+    "duration_ms": 240000,
+    "preview_count": 5,
+    "preview_duration_ms": 60000,
+    "response_mode": "token",
+    "navigation": "forward_only",
+    "timer_mode": "global",
+    "item_time_ms": 0,
+    "families": [
+      "anomaly",
+      "anomaly",
+      "anomaly",
+      "anomaly",
+      "letter"
+    ],
+    "engines": [
+      "sequences"
+    ],
+    "overlap": [],
+    "score_origin": "proposed",
+    "navigation_origin": "proposed",
+    "content_origin": "original practice",
+    "notes": "A timed original practice bank using the published count and time budget. New Maven formats are based on candidate reports; retain both classic and new presets.",
+    "aids": "Not established by the inspected public lobby; original practice uses no integrated calculator.",
+    "proposed": [
+      "Original generated questions and topic distribution; no private question bank is copied.",
+      "Scoring +1 correct, 0 wrong/blank; not a disclosed employer scoring rule.",
+      "Forward-only navigation with explicit skip; source navigation is unspecified."
+    ],
+    "unknown": [
+      "Exact question distribution, difficulty, and employer pass thresholds."
+    ],
+    "source": "https://www.tradermath.org/sequences/maven-securities/sequence-test/new-format/lobby",
+    "reviewed_on": "2026-11-17",
+    "manifest_version": "assessment-profiles-v1"
+  },
+  {
+    "spec_id": "A06-C",
+    "id": "maven-probability-classic",
+    "company_id": "maven",
+    "company": "Maven Securities",
+    "title": "Probability",
+    "variant": "classic",
+    "question_count": 18,
+    "duration_ms": 1800000,
+    "preview_count": 3,
+    "preview_duration_ms": 360000,
+    "response_mode": "single_choice",
+    "navigation": "forward_only",
+    "timer_mode": "global",
+    "item_time_ms": 0,
+    "families": [
+      "probability",
+      "advanced_probability"
+    ],
+    "engines": [
+      "probability"
+    ],
+    "overlap": [
+      "prob",
+      "nextcard",
+      "cards"
+    ],
+    "score_origin": "proposed",
+    "navigation_origin": "proposed",
+    "content_origin": "original practice",
+    "notes": "A timed original practice bank using the published count and time budget.",
+    "aids": "Calculator allowed in the cited practice description.",
+    "proposed": [
+      "Original generated questions and topic distribution; no private question bank is copied.",
+      "Scoring +1 correct, 0 wrong/blank; not a disclosed employer scoring rule.",
+      "Forward-only navigation with explicit skip; source navigation is unspecified."
+    ],
+    "unknown": [
+      "Exact question distribution, difficulty, and employer pass thresholds."
+    ],
+    "source": "https://www.tradermath.org/online-assessments/maven-securities/probability/lobby",
+    "reviewed_on": "2026-11-17",
+    "manifest_version": "assessment-profiles-v1"
+  },
+  {
+    "spec_id": "A06-N",
+    "id": "maven-probability-new",
+    "company_id": "maven",
+    "company": "Maven Securities",
+    "title": "Probability",
+    "variant": "new",
+    "question_count": 20,
+    "duration_ms": 600000,
+    "preview_count": 4,
+    "preview_duration_ms": 120000,
+    "response_mode": "numeric",
+    "navigation": "forward_only",
+    "timer_mode": "global",
+    "item_time_ms": 0,
+    "families": [
+      "probability",
+      "urn"
+    ],
+    "engines": [
+      "probability"
+    ],
+    "overlap": [
+      "prob",
+      "nextcard",
+      "cards"
+    ],
+    "score_origin": "proposed",
+    "navigation_origin": "proposed",
+    "content_origin": "original practice",
+    "notes": "A timed original practice bank using the published count and time budget. New Maven formats are based on candidate reports; retain both classic and new presets.",
+    "aids": "Tradermath describes no calculator or paper for the reported new employer format.",
+    "proposed": [
+      "Original generated questions and topic distribution; no private question bank is copied.",
+      "Scoring +1 correct, 0 wrong/blank; not a disclosed employer scoring rule.",
+      "Forward-only navigation with explicit skip; source navigation is unspecified."
+    ],
+    "unknown": [
+      "Exact question distribution, difficulty, and employer pass thresholds."
+    ],
+    "source": "https://www.tradermath.org/online-assessments/maven-securities/probability/new-format/lobby",
+    "reviewed_on": "2026-11-17",
+    "manifest_version": "assessment-profiles-v1"
+  },
+  {
+    "spec_id": "A07",
+    "id": "da-vinci-numerical",
+    "company_id": "da-vinci",
+    "company": "Da Vinci Trading",
+    "title": "Numerical Quiz",
+    "variant": "standard",
+    "question_count": 20,
+    "duration_ms": 720000,
+    "preview_count": 3,
+    "preview_duration_ms": 60000,
+    "response_mode": "single_choice",
+    "navigation": "forward_only",
+    "timer_mode": "global",
+    "item_time_ms": 0,
+    "families": [
+      "percentage",
+      "relation",
+      "arithmetic"
+    ],
+    "engines": [
+      "arithmetic"
+    ],
+    "overlap": [
+      "math",
+      "fruit"
+    ],
+    "score_origin": "proposed",
+    "navigation_origin": "published",
+    "content_origin": "original practice",
+    "notes": "A timed original practice bank using the published count and time budget.",
+    "aids": "Not established by the inspected public lobby; original practice uses no integrated calculator.",
+    "proposed": [
+      "Original generated questions and topic distribution; no private question bank is copied.",
+      "Scoring +1 correct, 0 wrong/blank; not a disclosed employer scoring rule."
+    ],
+    "unknown": [
+      "Exact question distribution, difficulty, and employer pass thresholds."
+    ],
+    "source": "https://www.tradermath.org/online-assessments/da-vinci-derivatives/numerical-quiz/lobby",
+    "reviewed_on": "2026-11-17",
+    "manifest_version": "assessment-profiles-v1"
+  },
+  {
+    "spec_id": "A08",
+    "id": "da-vinci-career",
+    "company_id": "da-vinci",
+    "company": "Da Vinci Trading",
+    "title": "Career Match",
+    "variant": "demo",
+    "question_count": 18,
+    "duration_ms": 720000,
+    "preview_count": 3,
+    "preview_duration_ms": 120000,
+    "response_mode": "single_choice",
+    "navigation": "forward_only",
+    "timer_mode": "global",
+    "item_time_ms": 0,
+    "families": [
+      "logic",
+      "arithmetic",
+      "verbal"
+    ],
+    "engines": [
+      "reasoning",
+      "arithmetic"
+    ],
+    "overlap": [
+      "math",
+      "fruit"
+    ],
+    "score_origin": "proposed",
+    "navigation_origin": "published",
+    "content_origin": "original demo",
+    "notes": "Content demo: the public lobby discloses timing and navigation, but not the subject matter. This mixed reasoning bank is an original substitute.",
+    "aids": "Not established by the inspected public lobby; original practice uses no integrated calculator.",
+    "proposed": [
+      "Original generated questions and topic distribution; no private question bank is copied.",
+      "Scoring +1 correct, 0 wrong/blank; not a disclosed employer scoring rule.",
+      "Mixed logic/arithmetic/verbal demo content, not a content reconstruction."
+    ],
+    "unknown": [
+      "Exact question distribution, difficulty, and employer pass thresholds.",
+      "Actual Career Match task taxonomy and grading."
+    ],
+    "source": "https://www.tradermath.org/online-assessments/da-vinci-derivatives/career-match/lobby",
+    "reviewed_on": "2026-11-17",
+    "manifest_version": "assessment-profiles-v1"
+  },
+  {
+    "spec_id": "A09",
+    "id": "sig-quantitative",
+    "company_id": "sig",
+    "company": "Susquehanna (SIG)",
+    "title": "Quantitative Evaluation",
+    "variant": "standard",
+    "question_count": 16,
+    "duration_ms": 1200000,
+    "preview_count": 3,
+    "preview_duration_ms": 180000,
+    "response_mode": "numeric",
+    "navigation": "forward_only",
+    "timer_mode": "global",
+    "item_time_ms": 0,
+    "families": [
+      "probability",
+      "advanced_probability"
+    ],
+    "engines": [
+      "probability"
+    ],
+    "overlap": [
+      "prob",
+      "nextcard",
+      "cards"
+    ],
+    "score_origin": "proposed",
+    "navigation_origin": "proposed",
+    "content_origin": "original practice",
+    "notes": "A timed original practice bank using the published count and time budget.",
+    "aids": "Calculator allowed in the cited practice description.",
+    "proposed": [
+      "Original generated questions and topic distribution; no private question bank is copied.",
+      "Scoring +1 correct, 0 wrong/blank; not a disclosed employer scoring rule.",
+      "Forward-only navigation with explicit skip; source navigation is unspecified.",
+      "Numeric or mixed answer controls chosen for this implementation; original controls are not established."
+    ],
+    "unknown": [
+      "Exact question distribution, difficulty, and employer pass thresholds."
+    ],
+    "source": "https://www.tradermath.org/online-assessments/susquehanna-international-group/sig-quantitative-evaluation/lobby",
+    "reviewed_on": "2026-11-17",
+    "manifest_version": "assessment-profiles-v1"
+  },
+  {
+    "spec_id": "A10",
+    "id": "sig-problem-solving",
+    "company_id": "sig",
+    "company": "Susquehanna (SIG)",
+    "title": "Problem Solving",
+    "variant": "standard",
+    "question_count": 17,
+    "duration_ms": 3600000,
+    "preview_count": 3,
+    "preview_duration_ms": 180000,
+    "response_mode": "mixed",
+    "navigation": "forward_only",
+    "timer_mode": "global",
+    "item_time_ms": 0,
+    "families": [
+      "logic",
+      "counting",
+      "advanced_probability"
+    ],
+    "engines": [
+      "reasoning",
+      "probability"
+    ],
+    "overlap": [
+      "prob",
+      "nextcard",
+      "cards"
+    ],
+    "score_origin": "proposed",
+    "navigation_origin": "proposed",
+    "content_origin": "original practice",
+    "notes": "A timed original practice bank using the published count and time budget.",
+    "aids": "Not established by the inspected public lobby; original practice uses no integrated calculator.",
+    "proposed": [
+      "Original generated questions and topic distribution; no private question bank is copied.",
+      "Scoring +1 correct, 0 wrong/blank; not a disclosed employer scoring rule.",
+      "Forward-only navigation with explicit skip; source navigation is unspecified.",
+      "Numeric or mixed answer controls chosen for this implementation; original controls are not established."
+    ],
+    "unknown": [
+      "Exact question distribution, difficulty, and employer pass thresholds."
+    ],
+    "source": "https://www.tradermath.org/online-assessments/susquehanna-international-group/problem-solving-assessment/lobby",
+    "reviewed_on": "2026-11-17",
+    "manifest_version": "assessment-profiles-v1"
+  },
+  {
+    "spec_id": "A11",
+    "id": "sig-equity",
+    "company_id": "sig",
+    "company": "Susquehanna (SIG)",
+    "title": "Equity Research",
+    "variant": "standard",
+    "question_count": 20,
+    "duration_ms": 1800000,
+    "preview_count": 3,
+    "preview_duration_ms": 180000,
+    "response_mode": "numeric",
+    "navigation": "forward_only",
+    "timer_mode": "global",
+    "item_time_ms": 0,
+    "families": [
+      "equity"
+    ],
+    "engines": [
+      "equity"
+    ],
+    "overlap": [
+      "etf",
+      "makeme"
+    ],
+    "score_origin": "proposed",
+    "navigation_origin": "proposed",
+    "content_origin": "original practice",
+    "notes": "A timed original practice bank using the published count and time budget.",
+    "aids": "Not established by the inspected public lobby; original practice uses no integrated calculator.",
+    "proposed": [
+      "Original generated questions and topic distribution; no private question bank is copied.",
+      "Scoring +1 correct, 0 wrong/blank; not a disclosed employer scoring rule.",
+      "Forward-only navigation with explicit skip; source navigation is unspecified.",
+      "Numeric or mixed answer controls chosen for this implementation; original controls are not established."
+    ],
+    "unknown": [
+      "Exact question distribution, difficulty, and employer pass thresholds."
+    ],
+    "source": "https://www.tradermath.org/online-assessments/susquehanna-international-group/equity-research/lobby",
+    "reviewed_on": "2026-11-17",
+    "manifest_version": "assessment-profiles-v1"
+  },
+  {
+    "spec_id": "A12",
+    "id": "drw-assessment",
+    "company_id": "drw",
+    "company": "DRW",
+    "title": "Online Assessment",
+    "variant": "practice MCQ",
+    "question_count": 6,
+    "duration_ms": 2700000,
+    "preview_count": 3,
+    "preview_duration_ms": 600000,
+    "response_mode": "single_choice",
+    "navigation": "revisable",
+    "timer_mode": "global",
+    "item_time_ms": 0,
+    "families": [
+      "advanced_probability",
+      "counting",
+      "logic"
+    ],
+    "engines": [
+      "probability",
+      "reasoning"
+    ],
+    "overlap": [
+      "prob",
+      "nextcard",
+      "cards"
+    ],
+    "score_origin": "published practice",
+    "navigation_origin": "published",
+    "content_origin": "original practice",
+    "notes": "Practice uses four choices. Tradermath describes numeric entry for the employer format. Use custom numeric mode to train without choices.",
+    "aids": "Not established by the inspected public lobby; original practice uses no integrated calculator.",
+    "proposed": [
+      "Original generated questions and topic distribution; no private question bank is copied."
+    ],
+    "unknown": [
+      "Exact question distribution, difficulty, and employer pass thresholds."
+    ],
+    "source": "https://www.tradermath.org/online-assessments/drw/lobby",
+    "reviewed_on": "2026-11-17",
+    "manifest_version": "assessment-profiles-v1"
+  },
+  {
+    "spec_id": "A13",
+    "id": "akuna-math",
+    "company_id": "akuna",
+    "company": "Akuna Capital",
+    "title": "Math",
+    "variant": "standard",
+    "question_count": 80,
+    "duration_ms": 480000,
+    "preview_count": 10,
+    "preview_duration_ms": 120000,
+    "response_mode": "numeric",
+    "navigation": "forward_only",
+    "timer_mode": "global",
+    "item_time_ms": 0,
+    "families": [
+      "integer",
+      "fraction",
+      "chained"
+    ],
+    "engines": [
+      "arithmetic"
+    ],
+    "overlap": [
+      "math",
+      "fruit"
+    ],
+    "score_origin": "proposed",
+    "navigation_origin": "proposed",
+    "content_origin": "original practice",
+    "notes": "A timed original practice bank using the published count and time budget.",
+    "aids": "Not established by the inspected public lobby; original practice uses no integrated calculator.",
+    "proposed": [
+      "Original generated questions and topic distribution; no private question bank is copied.",
+      "Scoring +1 correct, 0 wrong/blank; not a disclosed employer scoring rule.",
+      "Forward-only navigation with explicit skip; source navigation is unspecified.",
+      "Numeric or mixed answer controls chosen for this implementation; original controls are not established."
+    ],
+    "unknown": [
+      "Exact question distribution, difficulty, and employer pass thresholds."
+    ],
+    "source": "https://www.tradermath.org/mental-math/akuna-capital/math-test/realistic-test-mode/lobby",
+    "reviewed_on": "2026-11-17",
+    "manifest_version": "assessment-profiles-v1"
+  },
+  {
+    "spec_id": "A14",
+    "id": "akuna-sequences",
+    "company_id": "akuna",
+    "company": "Akuna Capital",
+    "title": "Sequences",
+    "variant": "standard",
+    "question_count": 30,
+    "duration_ms": 960000,
+    "preview_count": 10,
+    "preview_duration_ms": 300000,
+    "response_mode": "token",
+    "navigation": "forward_only",
+    "timer_mode": "global",
+    "item_time_ms": 0,
+    "families": [
+      "sequence",
+      "sequence",
+      "sequence",
+      "letter"
+    ],
+    "engines": [
+      "sequences"
+    ],
+    "overlap": [],
+    "score_origin": "proposed",
+    "navigation_origin": "proposed",
+    "content_origin": "original practice",
+    "notes": "A timed original practice bank using the published count and time budget.",
+    "aids": "Not established by the inspected public lobby; original practice uses no integrated calculator.",
+    "proposed": [
+      "Original generated questions and topic distribution; no private question bank is copied.",
+      "Scoring +1 correct, 0 wrong/blank; not a disclosed employer scoring rule.",
+      "Forward-only navigation with explicit skip; source navigation is unspecified."
+    ],
+    "unknown": [
+      "Exact question distribution, difficulty, and employer pass thresholds."
+    ],
+    "source": "https://www.tradermath.org/sequences/akuna-capital/sequence-test/realistic-test-mode/lobby",
+    "reviewed_on": "2026-11-17",
+    "manifest_version": "assessment-profiles-v1"
+  },
+  {
+    "spec_id": "A15",
+    "id": "akuna-grid",
+    "company_id": "akuna",
+    "company": "Akuna Capital",
+    "title": "VidCruiter Grid",
+    "variant": "original payoff model",
+    "question_count": 18,
+    "duration_ms": 0,
+    "preview_count": 3,
+    "preview_duration_ms": 0,
+    "response_mode": "mixed",
+    "navigation": "forward_only",
+    "timer_mode": "per_question",
+    "item_time_ms": 45000,
+    "families": [
+      "grid"
+    ],
+    "engines": [
+      "grid"
+    ],
+    "overlap": [
+      "prob"
+    ],
+    "score_origin": "published practice",
+    "navigation_origin": "proposed",
+    "content_origin": "original practice",
+    "notes": "Original model: signed letter payoffs, additive paired bets, disclosed row weights and costs. The source does not publish these rules or item timers.",
+    "aids": "Not established by the inspected public lobby; original practice uses no integrated calculator.",
+    "proposed": [
+      "Original generated questions and topic distribution; no private question bank is copied.",
+      "Forward-only navigation with explicit skip; source navigation is unspecified.",
+      "45 seconds per question; +letter pays +12 on its row, −1 otherwise; −letter negates; pairs add; disclosed weighted row probabilities; no noisy signals."
+    ],
+    "unknown": [
+      "Exact question distribution, difficulty, and employer pass thresholds.",
+      "Commercial payoff, pairing, noisy signals, controls and per-item deadlines."
+    ],
+    "source": "https://www.tradermath.org/akuna-vidcruiter",
+    "reviewed_on": "2026-11-17",
+    "manifest_version": "assessment-profiles-v1"
+  },
+  {
+    "spec_id": "A16",
+    "id": "citadel-trading",
+    "company_id": "citadel",
+    "company": "Citadel Securities",
+    "title": "Trading Assessment",
+    "variant": "standard",
+    "question_count": 10,
+    "duration_ms": 1800000,
+    "preview_count": 3,
+    "preview_duration_ms": 300000,
+    "response_mode": "numeric",
+    "navigation": "forward_only",
+    "timer_mode": "global",
+    "item_time_ms": 0,
+    "families": [
+      "probability",
+      "advanced_probability"
+    ],
+    "engines": [
+      "probability"
+    ],
+    "overlap": [
+      "prob",
+      "nextcard",
+      "cards"
+    ],
+    "score_origin": "proposed",
+    "navigation_origin": "proposed",
+    "content_origin": "original practice",
+    "notes": "A timed original practice bank using the published count and time budget.",
+    "aids": "Calculator allowed in the cited practice description.",
+    "proposed": [
+      "Original generated questions and topic distribution; no private question bank is copied.",
+      "Scoring +1 correct, 0 wrong/blank; not a disclosed employer scoring rule.",
+      "Forward-only navigation with explicit skip; source navigation is unspecified.",
+      "Numeric or mixed answer controls chosen for this implementation; original controls are not established."
+    ],
+    "unknown": [
+      "Exact question distribution, difficulty, and employer pass thresholds."
+    ],
+    "source": "https://www.tradermath.org/online-assessments/citadel-securities/probability-test/lobby",
+    "reviewed_on": "2026-11-17",
+    "manifest_version": "assessment-profiles-v1"
+  },
+  {
+    "spec_id": "A17",
+    "id": "wincent-quant",
+    "company_id": "wincent",
+    "company": "Wincent",
+    "title": "Quant Assessment",
+    "variant": "standard",
+    "question_count": 12,
+    "duration_ms": 6000000,
+    "preview_count": 3,
+    "preview_duration_ms": 1500000,
+    "response_mode": "numeric",
+    "navigation": "forward_only",
+    "timer_mode": "global",
+    "item_time_ms": 0,
+    "families": [
+      "advanced_probability",
+      "counting"
+    ],
+    "engines": [
+      "probability"
+    ],
+    "overlap": [
+      "prob",
+      "nextcard",
+      "cards"
+    ],
+    "score_origin": "proposed",
+    "navigation_origin": "proposed",
+    "content_origin": "original practice",
+    "notes": "A timed original practice bank using the published count and time budget.",
+    "aids": "Calculator, pen and paper allowed in the cited description.",
+    "proposed": [
+      "Original generated questions and topic distribution; no private question bank is copied.",
+      "Scoring +1 correct, 0 wrong/blank; not a disclosed employer scoring rule.",
+      "Forward-only navigation with explicit skip; source navigation is unspecified."
+    ],
+    "unknown": [
+      "Exact question distribution, difficulty, and employer pass thresholds."
+    ],
+    "source": "https://www.tradermath.org/online-assessments/wincent/quant-assessment/lobby",
+    "reviewed_on": "2026-11-17",
+    "manifest_version": "assessment-profiles-v1"
+  },
+  {
+    "spec_id": "A18",
+    "id": "flow-math",
+    "company_id": "flow",
+    "company": "Flow Traders",
+    "title": "Math",
+    "variant": "standard",
+    "question_count": 60,
+    "duration_ms": 360000,
+    "preview_count": 10,
+    "preview_duration_ms": 180000,
+    "response_mode": "numeric",
+    "navigation": "forward_only",
+    "timer_mode": "global",
+    "item_time_ms": 0,
+    "families": [
+      "integer",
+      "decimal",
+      "fraction",
+      "percentage",
+      "chained"
+    ],
+    "engines": [
+      "arithmetic"
+    ],
+    "overlap": [
+      "math",
+      "fruit"
+    ],
+    "score_origin": "proposed",
+    "navigation_origin": "proposed",
+    "content_origin": "original practice",
+    "notes": "A timed original practice bank using the published count and time budget.",
+    "aids": "Not established by the inspected public lobby; original practice uses no integrated calculator.",
+    "proposed": [
+      "Original generated questions and topic distribution; no private question bank is copied.",
+      "Scoring +1 correct, 0 wrong/blank; not a disclosed employer scoring rule.",
+      "Forward-only navigation with explicit skip; source navigation is unspecified.",
+      "Numeric or mixed answer controls chosen for this implementation; original controls are not established."
+    ],
+    "unknown": [
+      "Exact question distribution, difficulty, and employer pass thresholds."
+    ],
+    "source": "https://www.tradermath.org/mental-math/flow-traders/math-test/realistic-test-mode/lobby",
+    "reviewed_on": "2026-11-17",
+    "manifest_version": "assessment-profiles-v1"
+  },
+  {
+    "spec_id": "A19",
+    "id": "flow-sequences",
+    "company_id": "flow",
+    "company": "Flow Traders",
+    "title": "Sequences",
+    "variant": "standard",
+    "question_count": 26,
+    "duration_ms": 1500000,
+    "preview_count": 10,
+    "preview_duration_ms": 300000,
+    "response_mode": "numeric",
+    "navigation": "forward_only",
+    "timer_mode": "global",
+    "item_time_ms": 0,
+    "families": [
+      "sequence"
+    ],
+    "engines": [
+      "sequences"
+    ],
+    "overlap": [],
+    "score_origin": "proposed",
+    "navigation_origin": "proposed",
+    "content_origin": "original practice",
+    "notes": "A timed original practice bank using the published count and time budget.",
+    "aids": "Not established by the inspected public lobby; original practice uses no integrated calculator.",
+    "proposed": [
+      "Original generated questions and topic distribution; no private question bank is copied.",
+      "Scoring +1 correct, 0 wrong/blank; not a disclosed employer scoring rule.",
+      "Forward-only navigation with explicit skip; source navigation is unspecified."
+    ],
+    "unknown": [
+      "Exact question distribution, difficulty, and employer pass thresholds."
+    ],
+    "source": "https://www.tradermath.org/sequences/flow-traders/sequence-test/realistic-test-mode/lobby",
+    "reviewed_on": "2026-11-17",
+    "manifest_version": "assessment-profiles-v1"
+  },
+  {
+    "spec_id": "A20",
+    "id": "all-options-math",
+    "company_id": "all-options",
+    "company": "All Options",
+    "title": "Math",
+    "variant": "standard",
+    "question_count": 80,
+    "duration_ms": 480000,
+    "preview_count": 10,
+    "preview_duration_ms": 180000,
+    "response_mode": "numeric",
+    "navigation": "forward_only",
+    "timer_mode": "global",
+    "item_time_ms": 0,
+    "families": [
+      "integer",
+      "decimal",
+      "fraction"
+    ],
+    "engines": [
+      "arithmetic"
+    ],
+    "overlap": [
+      "math",
+      "fruit"
+    ],
+    "score_origin": "proposed",
+    "navigation_origin": "proposed",
+    "content_origin": "original practice",
+    "notes": "A timed original practice bank using the published count and time budget.",
+    "aids": "Not established by the inspected public lobby; original practice uses no integrated calculator.",
+    "proposed": [
+      "Original generated questions and topic distribution; no private question bank is copied.",
+      "Scoring +1 correct, 0 wrong/blank; not a disclosed employer scoring rule.",
+      "Forward-only navigation with explicit skip; source navigation is unspecified.",
+      "Numeric or mixed answer controls chosen for this implementation; original controls are not established."
+    ],
+    "unknown": [
+      "Exact question distribution, difficulty, and employer pass thresholds."
+    ],
+    "source": "https://www.tradermath.org/mental-math/all-options/math-test/realistic-test-mode/lobby",
+    "reviewed_on": "2026-11-17",
+    "manifest_version": "assessment-profiles-v1"
+  },
+  {
+    "spec_id": "A21",
+    "id": "all-options-sequences",
+    "company_id": "all-options",
+    "company": "All Options",
+    "title": "Sequences",
+    "variant": "standard",
+    "question_count": 26,
+    "duration_ms": 1500000,
+    "preview_count": 10,
+    "preview_duration_ms": 300000,
+    "response_mode": "numeric",
+    "navigation": "forward_only",
+    "timer_mode": "global",
+    "item_time_ms": 0,
+    "families": [
+      "sequence"
+    ],
+    "engines": [
+      "sequences"
+    ],
+    "overlap": [],
+    "score_origin": "proposed",
+    "navigation_origin": "proposed",
+    "content_origin": "original practice",
+    "notes": "A timed original practice bank using the published count and time budget.",
+    "aids": "Not established by the inspected public lobby; original practice uses no integrated calculator.",
+    "proposed": [
+      "Original generated questions and topic distribution; no private question bank is copied.",
+      "Scoring +1 correct, 0 wrong/blank; not a disclosed employer scoring rule.",
+      "Forward-only navigation with explicit skip; source navigation is unspecified."
+    ],
+    "unknown": [
+      "Exact question distribution, difficulty, and employer pass thresholds."
+    ],
+    "source": "https://www.tradermath.org/sequences/all-options/sequence-test/realistic-test-mode/lobby",
+    "reviewed_on": "2026-11-17",
+    "manifest_version": "assessment-profiles-v1"
+  },
+  {
+    "spec_id": "A22",
+    "id": "maven-interval",
+    "company_id": "maven",
+    "company": "Maven Securities",
+    "title": "Confidence Intervals",
+    "variant": "associated assessment",
+    "question_count": 1,
+    "duration_ms": 120000,
+    "preview_count": 1,
+    "preview_duration_ms": 120000,
+    "response_mode": "interval",
+    "navigation": "forward_only",
+    "timer_mode": "global",
+    "item_time_ms": 0,
+    "families": [
+      "interval"
+    ],
+    "engines": [
+      "interval"
+    ],
+    "overlap": [
+      "fermi",
+      "makeme"
+    ],
+    "score_origin": "proposed",
+    "navigation_origin": "proposed",
+    "content_origin": "original practice",
+    "notes": "One 80% estimation interval with typed reasoning. Original interval loss rewards both width and coverage; it is not a disclosed commercial score.",
+    "aids": "Not established by the inspected public lobby; original practice uses no integrated calculator.",
+    "proposed": [
+      "Original generated questions and topic distribution; no private question bank is copied.",
+      "Scoring +1 correct, 0 wrong/blank; not a disclosed employer scoring rule.",
+      "Forward-only navigation with explicit skip; source navigation is unspecified.",
+      "Text reasoning and alpha=0.2 interval loss; no camera/proctoring or automatic reasoning grade."
+    ],
+    "unknown": [
+      "Exact question distribution, difficulty, and employer pass thresholds.",
+      "Original interval grading and media handling."
+    ],
+    "source": "https://www.tradermath.org/online-assessments/maven-securities/confidence-interval/lobby",
+    "reviewed_on": "2026-11-17",
+    "manifest_version": "assessment-profiles-v1"
+  }
+]

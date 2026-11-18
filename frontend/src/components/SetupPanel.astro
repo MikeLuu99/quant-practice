@@ -1,0 +1,46 @@
+---
+interface Props { slug: string; defaults: string }
+const { slug } = Astro.props;
+const assessmentRelated: Record<string,string> = {math:"maven-numerical-new",fruit:"flow-math",prob:"maven-probability-new",nextcard:"citadel-trading",cards:"sig-quantitative",fermi:"maven-interval",makeme:"maven-interval",etf:"sig-equity"};
+const hints: Record<string, string> = {
+  cards: "Play solo against two computer traders, or add friends and take turns making the market.",
+  makeme: "Play solo against an informed computer, or add friends for a rotating market.",
+};
+---
+<section id="setup" class="setup-panel">
+  <div class="setup-intro">
+    
+    <h2>Start a game.</h2>
+    <p>{hints[slug] || "Play solo or add friends."}</p>
+  </div>
+  <form id="setup-form" class="setup-form">
+    <div>
+      <label class="field-label" for="players">Player name</label>
+      <input id="players" name="players" value="p1" required maxlength="300" autocomplete="off" />
+      <span class="field-note">For multiple players, separate names with commas.</span>
+    </div>
+    <details>
+      <summary>Practice settings</summary>
+      <div class="advanced">
+        <label class="field-label" for="seed">Challenge seed</label>
+        <input id="seed" name="seed" inputmode="numeric" placeholder="Random each time" />
+        <span class="field-note">Reuse a seed to repeat a deal.</span>
+      </div>
+    </details>
+    <button class="btn primary" type="submit">Start playing ↗</button>
+    <div class="err" id="setup-error" role="alert"></div>
+  </form>
+</section>
+{assessmentRelated[slug] && <p class="practice-related"><a class="btn sm" href={`/assessment/?profile=${assessmentRelated[slug]}`}>Related assessments ↗</a></p>}
+<div id="action-notice" class="action-notice" role="status" aria-live="polite" hidden></div>
+<section id="board" aria-label="Game board" hidden></section>
+<section id="results" aria-label="Session results" hidden></section>
+<div class="session-tools" id="session-tools" hidden>
+  <div class="row"><span id="connection-status">Connected · live</span><span id="player-switch"></span></div>
+  <div class="row">
+    <button class="btn sm" id="new-session">New session ↗</button>
+    <button class="btn sm" id="show-results" disabled title="Available when the session ends">Scoreboard</button>
+    <button class="btn sm" id="show-tape" disabled title="Available when the session ends">Replay data</button>
+  </div>
+</div>
+<pre id="tape-box" class="panel mono" hidden></pre>

@@ -1,0 +1,99 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import SetupPanel from "../../components/SetupPanel.astro";
+const defaults = JSON.stringify({ duration_ms: 300000, max_count: 12, min_trade_interval_ms: 400, spread_bp: 400 });
+---
+<Layout title="Fruit Market" subtitle="free · solo or 1-300 players">
+  <h1>Fruit Market</h1>
+  <details class="game-rules"><summary>How to play</summary><p class="rules">Count the apples and oranges across both baskets. The fair value is total apples × total oranges × the current multiplier. Buy below that value or sell above it. Baskets grow and special events change the calculation. Your first-trade accuracy multiplies your final profit.</p></details>
+  <SetupPanel slug="fruit" defaults={defaults} />
+</Layout>
+
+<script>
+  import { mountBoard, fmtNum, renderPlayerTable, type Controller } from "../../lib/api";
+  import { fmtClock } from "../../lib/logic";
+
+  const apple = `<svg class="fruit-icon" viewBox="0 0 40 48" aria-hidden="true"><path d="M20 15C4 2-6 31 9 43c5 4 8 1 11 1s6 3 11-1C46 31 36 2 20 15Z" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M20 15V5m0 5C20 1 30 1 30 1c0 8-6 10-10 9" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>`;
+  const orange = `<svg class="fruit-icon" viewBox="0 0 40 48" aria-hidden="true"><circle cx="20" cy="27" r="17" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M20 10V4m0 5c2-8 10-8 10-8-1 8-6 10-10 8M10 23l2-2m-1 11 2 1m17-8-2-2m-4 15 1-2" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>`;
+  mountBoard({
+    slug: "fruit",
+    defaults: { duration_ms: 300000, max_count: 12, min_trade_interval_ms: 400, spread_bp: 400 },
+    render(c: Controller, board: HTMLElement) {
+      const s = c.state || {};
+      const me = s.me || {};
+      const bags = s.bags || [];
+      const ev = s.event || {};
+      const acc = me.accuracy ?? 0;
+      board.innerHTML = `
+        <div class="row" style="justify-content:space-between">
+          <span class="timer">time left <b><span data-clock>${fmtClock(s.time_remaining_ms ?? 0)}</span></b> · market v${s.market_version ?? 0}</span>
+          <span>
+            ${ev.type && ev.type !== "NONE" ? `<span class="badge warn">${ev.type}</span>` : ""}
+          </span>
+        </div>
+        <div class="grid3">
+          ${bags.map((b: any, i: number) => `
+            <div class="panel fruit-basket">
+              <div class="eyebrow">Basket ${String(i + 1).padStart(2, "0")}${(ev.nullified || []).includes(i) ? ' <span class="badge bad">nullified</span>' : ""}</div>
+              <div class="fruit-counts"><div class="fruit-count">${apple}<div><strong>${b.apples}</strong><small>Apples</small></div></div><div class="fruit-count">${orange}<div><strong>${b.oranges}</strong><small>Oranges</small></div></div></div>
+            </div>
+          `).join("")}
+          <div class="panel">
+            <div class="muted" style="font-size:16px">your book</div>
+            <div class="big" id="profit" style="color:${(me.profit ?? 0) >= 0 ? "var(--good)" : "var(--bad)"}">${fmtNum(me.profit ?? 0)}</div>
+            <div class="muted">trades ${me.trades ?? 0} · first clicks ${me.first_clicks_correct ?? 0}/${me.first_clicks_tried ?? 0} · accuracy ${(acc * 100).toFixed(0)}%</div>
+          </div>
+        </div>
+        <div class="fruit-equation">Σ apples × Σ oranges × ${ev.multiplier ?? 1} multiplier = fair value</div>
+        <div class="panel">
+          <div class="row">
+            <span class="eyebrow">The market</span>
+            <span class="badge bad">bid ${s.bid}</span>
+            <span class="badge good">ask ${s.ask}</span>
+            <span style="flex:1"></span>
+            <button class="btn good" id="buy">BUY @ ${s.ask}</button>
+            <button class="btn bad" id="sell">SELL @ ${s.bid}</button>
+          </div>
+          <div class="err" id="act-err"></div>
+          <div id="last-trade" class="muted" style="margin-top:6px"></div>
+        </div>
+      `;
+      const err = board.querySelector("#act-err")!;
+      const last = board.querySelector<HTMLElement>("#last-trade")!;
+      const doTrade = async (action: string) => {
+        const out = await c.act(action, { quantity: 1 });
+        if (!out.accepted) {
+          err.textContent = `rejected: ${out.reason}`;
+          return;
+        }
+        err.textContent = "";
+        const r = out.round_reward ?? 0;
+        last.innerHTML = `${action} filled · reward <b style="color:${r >= 0 ? "var(--good)" : "var(--bad)"}">${fmtNum(r)}</b>` +
+          (out.private_changes?.first_click ? ` · first click <b>${out.private_changes.first_click}</b>` : "");
+        last.classList.remove("flash");
+        void last.offsetWidth;
+        last.classList.add("flash");
+        await c.refresh();
+      };
+      board.querySelector("#buy")?.addEventListener("click", () => doTrade("BUY"));
+      board.querySelector("#sell")?.addEventListener("click", () => doTrade("SELL"));
+    },
+    renderResults(c: Controller, results: any, box: HTMLElement) {
+      const v = document.createElement("div");
+      v.className = "panel";
+      v.innerHTML = `<span class="muted">final value</span> <span class="big">${results.final_value ?? "-"}</span>
+        <span class="muted"> · final bags ${JSON.stringify(results.final_bags)}</span>`;
+      box.appendChild(v);
+      renderPlayerTable(box, results.players || [], [
+        ["player", "player"],
+        ["raw_profit", "raw profit"],
+        ["first_clicks_correct", "first clicks ✓"],
+        ["first_clicks_tried", "tried"],
+        ["accuracy", "accuracy"],
+        ["final_score", "final score"],
+        ["rank", "rank"],
+        ["global_points", "global pts"],
+      ]);
+    },
+  });
+</script>

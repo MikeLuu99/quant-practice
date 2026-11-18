@@ -1,0 +1,109 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import SetupPanel from "../../components/SetupPanel.astro";
+const defaults = JSON.stringify({ duration_ms: 300000, mode: "mixed", count: 200 });
+---
+<Layout title="Math Challenge" subtitle="free · solo or 1-300 players">
+  <h1>Math Challenge</h1>
+  <details class="game-rules"><summary>How to play</summary><p class="rules">Solve as many questions as you can before the clock runs out. Correct answers earn 1 point; wrong answers lose 1. Enter a whole number, decimal, or fraction (such as 3/4). Each player works through the same questions at their own pace.</p></details>
+  <SetupPanel slug="math" defaults={defaults} />
+</Layout>
+
+<script>
+  import { mountBoard, fmtNum, renderPlayerTable, type Controller } from "../../lib/api";
+  import { fmtClock, escapeHTML as esc } from "../../lib/logic";
+
+  mountBoard({
+    slug: "math",
+    defaults: { duration_ms: 300000, mode: "mixed", count: 200 },
+    render(c: Controller, board: HTMLElement) {
+      const s = c.state || {};
+      const q = s.question;
+      board.innerHTML = `
+        <div class="row" style="justify-content:space-between">
+          <span class="timer">time left <b><span data-clock>${fmtClock(s.time_remaining_ms ?? 0)}</span></b></span>
+          <span class="badge accent">item ${(s.index ?? 0) + 1} / ${s.total ?? "?"}</span>
+        </div>
+        <div class="question-panel">
+          ${q ? `
+            <div class="muted" style="font-size:16px">${q.mode}</div>
+            <div class="big mono" style="font-size:38px">${q.expression}</div>
+            <div class="row" style="justify-content:center; margin-top:12px">
+              <input id="answer" placeholder="answer: 12, 3.75 or 3/4" size="18" autocomplete="off" />
+              <button class="btn primary" id="submit">Answer</button>
+            </div>
+            <div class="err" id="act-err"></div>
+            <div id="feedback" style="margin-top:8px"></div>
+          ` : `<div class="muted">no question (finished or exhausted)</div>`}
+        </div>
+        <div class="grid3">
+          <div class="panel"><div class="muted">score</div><div class="big" id="score">${s.score ?? 0}</div></div>
+          <div class="panel"><div class="muted">correct</div><div class="big" style="color:var(--good)">${s.correct ?? 0}</div></div>
+          <div class="panel"><div class="muted">incorrect</div><div class="big" style="color:var(--bad)">${s.incorrect ?? 0}</div></div>
+        </div>
+      `;
+      if (!q) return;
+      const input = board.querySelector("#answer") as HTMLInputElement;
+      const err = board.querySelector("#act-err")!;
+      const fb = board.querySelector("#feedback")!;
+      const submit = async () => {
+        const out = await c.act("ANSWER", { question_id: q.question_id, answer: input.value });
+        if (!out.accepted) {
+          err.textContent = `rejected: ${out.reason}`;
+          return;
+        }
+        err.textContent = "";
+        const ok = out.execution?.correct;
+        fb.innerHTML = out.execution
+          ? `<span class="badge ${ok ? "good" : "bad"}">${ok ? "correct +1" : "wrong -1"} · answer: ${out.execution.correct_answer}</span>`
+          : "";
+        input.value = "";
+        await c.refresh();
+      };
+      board.querySelector("#submit")?.addEventListener("click", submit);
+      input.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") submit();
+      });
+      input.focus();
+    },
+    renderResults(c: Controller, allResults: any, box: HTMLElement) {
+      const results = allResults.players?.find((p: any) => p.player === c.me) || allResults;
+      if (allResults.players?.length > 1) renderPlayerTable(box, allResults.players, [["player", "Player"], ["score", "Score"], ["correct", "Correct"], ["incorrect", "Incorrect"], ["rank", "Rank"]]);
+      const sum = document.createElement("div");
+      sum.className = "panel";
+      sum.innerHTML = `
+        <span class="big">${results.score}</span> <span class="muted">net points</span> ·
+        correct ${results.correct} / incorrect ${results.incorrect} ·
+        ${results.seconds_per_point != null ? `${results.seconds_per_point}s per point · speed bonus ${results.speed_points}` : "no speed bonus (nonpositive net)"}
+      `;
+      box.appendChild(sum);
+      const review = document.createElement("div");
+      review.className = "panel";
+      review.innerHTML = `<h2 style="margin-top:0">Review (${(results.review || []).length} attempted)</h2>`;
+      const tbl = document.createElement("table");
+      tbl.className = "tbl";
+      tbl.innerHTML = `
+        <thead><tr><th>#</th><th>expression</th><th>your answer</th><th>result</th><th class="num">latency</th></tr></thead>
+        <tbody>
+          ${(results.review || []).map((r: any, i: number) => `
+            <tr>
+              <td>${i + 1}</td>
+              <td class="mono">${r.expression}</td>
+              <td class="mono">${esc(r.given)}</td>
+              <td><span class="badge ${r.correct ? "good" : "bad"}">${r.correct ? "correct" : "wrong"}</span></td>
+              <td class="num">${(r.latency_ms / 1000).toFixed(1)}s</td>
+            </tr>
+          `).join("")}
+        </tbody>`;
+      review.appendChild(tbl);
+      box.appendChild(review);
+      renderPlayerTable(box, [{ player: c.me, ...results }], [
+        ["player", "player"],
+        ["score", "net"],
+        ["correct", "correct"],
+        ["incorrect", "wrong"],
+        ["speed_points", "speed pts"],
+      ]);
+    },
+  });
+</script>

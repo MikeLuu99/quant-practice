@@ -1,0 +1,56 @@
+---
+import "../styles/assessment.css";
+import { companyLogo } from "../lib/company-brands";
+import Layout from "../layouts/Layout.astro";
+import profiles from "../../../backend/internal/games/assessment_profiles.json";
+const firms = [...new Map(profiles.map(p=>[p.company_id,p.company])).entries()];
+const engines: Record<string,string>={arithmetic:"Mental math",probability:"Probability",sequences:"Sequences",reasoning:"Mixed reasoning",cube:"Cube folding",equity:"Equity analysis",grid:"Letter grid",interval:"Estimation intervals"};
+---
+<Layout title="Assessments">
+  <section class="assessment-hero" id="assessment-intro">
+    <div><span class="eyebrow">11 firms · 25 formats</span><h1>Prepare for<br/><em>your next round.</em></h1><p>Choose a firm, format, and time limit.</p></div>
+    <div class="assessment-hero-aside"><span class="assessment-big-number">25</span><span class="eyebrow">Practice formats</span><div class="scanlines" aria-hidden="true"></div></div>
+  </section>
+  <div id="assessment-error" class="err" role="alert"></div>
+  <section id="assessment-setup" aria-label="Configure your assessment">
+    <div class="assessment-setup-grid">
+      <form id="assessment-start-form" class="assessment-config">
+        <h2>Set up your assessment.</h2>
+        <div class="assessment-selectors"><label class="field-label" for="assessment-company">Company<select id="assessment-company">{firms.map(([id,name])=><option value={id}>{name}</option>)}</select></label><label class="field-label" for="assessment-profile">Assessment<select id="assessment-profile"></select></label></div>
+        <fieldset class="mode-picker"><legend class="field-label">Session format</legend><label><input type="radio" name="mode" value="preview" checked/><span>Quick preview</span></label><label><input type="radio" name="mode" value="full"/><span>Full assessment</span></label><label><input type="radio" name="mode" value="custom"/><span>Custom practice</span></label></fieldset>
+        <div id="assessment-custom" class="assessment-custom" hidden>
+          <label class="field-label">Questions<input id="custom-count" type="number" min="1" max="300" value="10"/></label>
+          <label class="field-label" id="custom-duration-label">Total minutes<input id="custom-duration" type="number" min="0.017" max="120" step="any" value="5"/></label>
+          <label class="field-label" id="custom-item-label" hidden>Seconds per item<input id="custom-item-time" type="number" min="1" max="600" value="45"/></label>
+          <label class="field-label">Navigation<select id="custom-navigation"><option value="forward_only">Forward only</option><option value="revisable">Revisable</option></select></label>
+          <label class="field-label">Answer controls<select id="custom-response"><option value="numeric">Typed numbers</option><option value="single_choice">Multiple choice</option><option value="mixed">Native / mixed</option><option value="token">Number / letter</option><option value="interval">Interval</option></select></label>
+          <label class="field-label">Question mix<select id="custom-family"><option value="">Complete profile mix</option></select></label>
+          <label class="field-label">Wrong-answer points<select id="custom-wrong"><option value="0">0 · no negative marking</option><option value="-1">−1 · accuracy drill</option></select></label>
+          <p class="field-note">Visual and verbal questions keep their native controls.</p>
+        </div>
+        <details class="assessment-advanced"><summary>Player & seed</summary><div class="assessment-selectors"><label class="field-label">Player name<input id="assessment-player" value="p1" maxlength="80" required/></label><label class="field-label">Challenge seed<input id="assessment-seed" inputmode="numeric" placeholder="Random each attempt"/></label></div><span class="field-note">Reuse a seed and settings to repeat the questions.</span></details>
+        <div class="assessment-start-row"><button class="btn primary" type="submit" id="assessment-start">Start assessment ↗</button><span class="mono" id="assessment-start-summary"></span></div>
+      </form>
+      <aside class="assessment-profile-info" id="assessment-profile-info" aria-live="polite"></aside>
+    </div>
+    <div class="catalogue-heading"><h2>Practice by firm.</h2></div>
+    <div class="assessment-filters"><label class="sr-only" for="assessment-search">Search assessments</label><input id="assessment-search" type="search" placeholder="Search company or assessment…"/><label class="sr-only" for="assessment-engine-filter">Filter task family</label><select id="assessment-engine-filter"><option value="">All task families</option>{Object.entries(engines).map(([key,label])=><option value={key}>{label}</option>)}</select><span id="assessment-filter-count" class="mono">25 profiles</span></div>
+    <div class="firm-catalogue" id="firm-catalogue">
+      {firms.map(([id,company])=><section class="firm-card" data-company={id}><div class="firm-heading"><div class="firm-logo-row" set:html={companyLogo(id,company)} /><span class="eyebrow">{String(firms.findIndex(f=>f[0]===id)+1).padStart(2,"0")} / Interview practice</span><h3>{company}</h3></div><div class="firm-assessments">{profiles.filter(p=>p.company_id===id).map(p=><button class="firm-assessment" data-profile={p.id} data-search={`${company} ${p.title} ${p.variant}`.toLowerCase()} data-engines={p.engines.join(" ")}><span><b>{p.title}</b><small>{p.variant} · {p.question_count} questions · {p.timer_mode==='per_question'?'individual timers':`${p.duration_ms/60000} min`}</small></span><span aria-hidden="true">↗</span></button>)}</div></section>)}
+    </div>
+    <p id="assessment-no-matches" class="panel" hidden>No assessments match those filters.</p>
+    <div class="assessment-overlap panel"><h2>Related practice</h2><div class="overlap-links"><a href="/trainer/">Focused skills → All 22 trainers</a><a href="/games/math/">Mental arithmetic → Math Challenge</a><a href="/games/prob/">Probability & EV → Probability Betting</a><a href="/games/fermi/">Estimation → Fermi Questions</a><a href="/games/cards/">Card probabilities → Market of Cards</a></div></div>
+    <details class="panel replay-import"><summary>Verify a replay</summary><p class="muted">Upload an exported replay to verify its result.</p><label class="field-label">Assessment tape (.json)<input id="assessment-replay-file" type="file" accept="application/json,.json"/></label><div id="assessment-replay-status" role="status"></div></details>
+    <p class="assessment-source-note">Independent practice content. Not affiliated with the companies shown. <a href="/specifications/tradermath_assessments_specification_and_overlap.md" download>Rules & sources ↓</a></p>
+  </section>
+  <section id="assessment-session" aria-label="Assessment session" hidden>
+    <div class="assessment-session-head"><div class="attempt-brand"><div id="attempt-logo"></div><div><span class="eyebrow" id="attempt-company"></span><h2 id="attempt-title"></h2></div></div><div class="assessment-clock"><span class="eyebrow" id="attempt-timer-label">Time remaining</span><b id="attempt-clock">—</b></div></div>
+    <div class="assessment-progress"><progress id="attempt-progress" value="0" max="1" aria-label="Questions answered"></progress><span id="attempt-count" class="mono"></span><span id="attempt-save-status" class="mono" role="status"></span></div>
+    <div class="assessment-workspace"><aside class="question-navigator"><span class="eyebrow">Question index</span><div id="assessment-question-nav"></div><p id="attempt-nav-policy" class="field-note"></p></aside><div><form id="assessment-answer-form" class="assessment-question-panel"><div class="row" style="justify-content:space-between"><span class="eyebrow" id="attempt-question-family"></span><span class="mono" id="attempt-question-number"></span></div><h3 id="attempt-prompt"></h3><div id="attempt-assets"></div><div id="attempt-inputs"></div><div class="err" id="attempt-answer-error" role="alert"></div><div class="assessment-question-actions"><button class="btn" type="button" id="attempt-previous">← Previous</button><button class="btn" type="button" id="attempt-skip">Skip question →</button><button class="btn primary" type="submit" id="attempt-next">Save & next →</button></div></form><div class="assessment-submit-row"><span class="field-note">Solutions appear after submission.</span><button class="btn sm" id="attempt-submit">Finish assessment</button></div></div></div>
+    <div id="assessment-results" hidden></div>
+    <div class="session-tools"><span class="mono" id="attempt-connection-status">Connected · server timer</span><div class="row"><button class="btn sm" id="attempt-export" disabled>Download replay ↓</button><button class="btn sm" id="attempt-new">New attempt ↗</button></div></div>
+  </section>
+</Layout>
+<script>
+  import "../lib/assessment";
+</script>

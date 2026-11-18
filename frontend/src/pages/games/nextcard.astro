@@ -1,0 +1,55 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import SetupPanel from "../../components/SetupPanel.astro";
+const defaults = JSON.stringify({ suits: 4, mode: "higher_lower", starting_balance: 100, betting_timer_ms: 20000, result_ms: 6000, cycles: 1 });
+---
+<Layout title="Next Card Betting" subtitle="1–300 players · probability & bankroll">
+  <h1>Next Card Betting</h1>
+  <details class="game-rules"><summary>How to play</summary><p class="rules">Will the next card be higher or lower? Choose your side and size your stake. Win an amount equal to your stake; lose it on a wrong call. Equal ranks return your stake. Aces count as 1. Your final skill score rewards good decisions and sizing close to the Kelly target.</p></details>
+  <SetupPanel slug="nextcard" defaults={defaults} />
+</Layout>
+<script>
+  import { mountBoard, fmtNum, renderPlayerTable } from "../../lib/api";
+  import { fmtClock, parseStake } from "../../lib/logic";
+  import { playingCard } from "../../lib/cards";
+  mountBoard({
+    slug: "nextcard", defaults: { suits: 4, mode: "higher_lower", starting_balance: 100, betting_timer_ms: 20000, result_ms: 6000, cycles: 1 },
+    render(c, board) {
+      const s = c.state || {};
+      const canBet = s.phase === "BETTING" && !s.acted;
+      const inside = s.mode === "inside_outside";
+      const predictions = inside ? ["INSIDE","OUTSIDE"] : ["HIGHER","LOWER"];
+      const mr = s.my_result;
+      const recent = s.history?.at(-1)?.my_result;
+      board.innerHTML = `
+        <div class="row" style="justify-content:space-between"><span class="eyebrow">Round ${s.round} of ${s.total_rounds} / ${inside ? "Inside or outside" : "Higher or lower"}</span><span class="timer"><span data-clock>${fmtClock(s.time_remaining_ms ?? 0)}</span> · ${s.phase === "RESULT" ? "Next deal" : s.phase === "DONE" ? "Complete" : "Place your bet"}</span></div>
+        <div class="board-columns">
+          <div>
+            <div class="card-table">
+              <span class="eyebrow">${s.phase === "RESULT" ? "The cards are on the table" : "The next card is your call"}</span>
+              <div class="card-stage"><div class="card-hand">${playingCard(s.ref1)}${s.ref2 ? playingCard(s.ref2) : ""}<span class="draw-arrow" aria-hidden="true">→</span>${playingCard(s.draw)}</div></div>
+              ${mr ? `<div class="result-banner">${mr.outcome === "WIN" ? "A good call." : mr.outcome === "LOSS" ? "The other way." : mr.outcome === "PUSH" ? "An even draw." : "A round observed."}</div><p class="mono">${mr.outcome}${mr.delta ? ` / ${mr.delta > 0 ? "+" : ""}${fmtNum(mr.delta)}` : ""}</p>` : `<div class="table-caption">${s.acted ? "Your decision is locked. Waiting for the table." : "Reference card → Next card"}</div>`}
+              ${mr?.feedback ? `<div class="book-strip"><span>WIN ${(mr.feedback.p_win * 100).toFixed(1)}%</span><span>LOSS ${(mr.feedback.p_loss * 100).toFixed(1)}%</span><span>PUSH ${(mr.feedback.p_push * 100).toFixed(1)}%</span></div><p class="muted">Best side: ${mr.feedback.target || "Pass"} · Kelly target: ${(mr.feedback.kelly_fraction * 100).toFixed(1)}% of bankroll</p>` : ""}
+            </div>
+            <div class="stat-strip"><div class="stat"><span class="eyebrow">Bankroll</span><span class="stat-value">${fmtNum(s.balance ?? 0)}</span></div><div class="stat"><span class="eyebrow">Net profit</span><span class="stat-value">${s.balance - s.starting_balance > 0 ? "+" : ""}${fmtNum((s.balance ?? 0) - (s.starting_balance ?? 100))}</span></div><div class="stat"><span class="eyebrow">Last round</span><span class="stat-value">${recent ? `${recent.delta > 0 ? "+" : ""}${fmtNum(recent.delta)}` : "—"}</span></div></div>
+          </div>
+          <div class="trade-panel"><span class="eyebrow">Even-money payout / 1:1</span><h2>${canBet ? "Back your intuition." : s.phase === "RESULT" ? "Review your edge." : s.phase === "DONE" ? "Well played." : "You're in."}</h2>
+            ${canBet ? `<p class="muted">Choose a stake, then call the next card. Equal ranks are a push.</p><div class="stake-field"><label class="field-label" for="stake">Your stake</label><input id="stake" inputmode="decimal" placeholder="0.00" autocomplete="off"/><span class="field-note">Available bankroll: ${fmtNum(s.balance)}</span></div><div class="stake-shortcuts">${[10,25,50].map(n => `<button class="btn sm" data-fraction="${n/100}">${n}%</button>`).join("")}</div><div class="trade-actions">${predictions.map((p,i) => `<button class="btn ${i === 0 ? "good" : ""}" data-pred="${p}">${p === "HIGHER" ? "↑ Higher" : p === "LOWER" ? "↓ Lower" : p === "INSIDE" ? "↔ Inside" : "⇥ Outside"}</button>`).join("")}<button class="btn" id="pass">Pass</button></div>` : `<p class="muted">${s.phase === "RESULT" ? "Compare your decision with the true probabilities. Your next hand arrives automatically." : s.phase === "DONE" ? "Your final score is below the table." : "Your decision is saved. The next card reveals once everyone has acted or time runs out."}</p>`}
+            <div class="err" id="act-err"></div>
+          </div>
+        </div>
+        <div class="panel"><span class="eyebrow">Previous hands</span><ul class="activity-list">${(s.history || []).slice(-6).reverse().map((h: any) => `<li><span class="row"><span>R${h.round}</span>${playingCard(h.ref1,"small")}${h.ref2 ? playingCard(h.ref2,"small") : ""}<span>→</span>${playingCard(h.draw,"small")}</span><span>${h.my_result?.outcome || "—"}<br/>${h.my_result ? `${h.my_result.delta > 0 ? "+" : ""}${fmtNum(h.my_result.delta)}` : ""}</span></li>`).join("") || '<li class="muted">Your first hand is waiting.</li>'}</ul></div>`;
+      const input = board.querySelector("#stake") as HTMLInputElement | null;
+      board.querySelectorAll<HTMLElement>("[data-fraction]").forEach(b => b.addEventListener("click", () => { if (input) { input.value = (Math.floor(s.balance * Number(b.dataset.fraction) * 100)/100).toFixed(2); input.focus(); } }));
+      board.querySelectorAll<HTMLElement>("[data-pred]").forEach(b => b.addEventListener("click", async () => {
+        const stake = parseStake(input?.value || "", s.balance);
+        if (!Number.isFinite(stake)) { board.querySelector("#act-err")!.textContent = "Enter a positive stake within your bankroll."; return; }
+        await c.act("BET", { prediction: b.dataset.pred, stake }); await c.refresh();
+      }));
+      board.querySelector("#pass")?.addEventListener("click", async () => { await c.act("PASS"); await c.refresh(); });
+    },
+    renderResults(c, results, box) {
+      renderPlayerTable(box, results.players || [], [["player","Player"],["skill","Skill / 10"],["decision_fraction","Decisions"],["sizing_average","Sizing"],["final_balance","Bankroll"],["rank","Rank"],["global_points","Points"]]);
+    },
+  });
+</script>

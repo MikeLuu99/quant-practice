@@ -1,0 +1,190 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import SetupPanel from "../../components/SetupPanel.astro";
+const defaults = JSON.stringify({ rounds: 3, estimate_timer_ms: 30000, quote_timer_ms: 20000, respond_timer_ms: 12000, question_timer_ms: 45000, spread_pct: 0.15 });
+---
+<Layout title="Make Me a Market" subtitle="premium · solo with informed bot, or multiplayer">
+  <h1>Make Me a Market</h1>
+  <details class="game-rules"><summary>How to play</summary><p class="rules">What is the hidden quantity worth? Quote a bid and ask within the spread limit. In solo mode, an informed computer trades against your prices. With friends, estimate first, then take turns making markets. Finish by answering questions about your cash and position.</p></details>
+  <SetupPanel slug="makeme" defaults={defaults} />
+</Layout>
+
+<script>
+  import { mountBoard, fmtNum, renderPlayerTable, type Controller } from "../../lib/api";
+  import { fmtClock, escapeHTML as esc } from "../../lib/logic";
+
+  mountBoard({
+    slug: "makeme",
+    defaults: { rounds: 3, estimate_timer_ms: 30000, quote_timer_ms: 20000, respond_timer_ms: 12000, question_timer_ms: 45000, spread_pct: 0.15 },
+    render(c: Controller, board: HTMLElement) {
+      const s = c.state || {};
+      let inner = `
+        <div class="row" style="justify-content:space-between">
+          <span class="badge accent">${s.mode} · phase ${s.phase}${s.mode === "multiplayer" ? ` · turn ${s.turn}/${s.total_turns}` : ` · round ${s.round}/${s.rounds}`}</span>
+          <span class="timer"><span data-clock>${fmtClock(s.time_remaining_ms ?? 0)}</span></span>
+        </div>
+        <div class="panel" style="text-align:center">
+          <div class="muted" style="font-size:16px">the question (answer hidden · domain [0, ${s.question?.domain?.[1] ?? "?"}] · spread cap ${s.spread_limit})</div>
+          <div style="font-weight:700; font-size:19px; margin:6px 0">${s.question?.prompt}</div>
+          <div class="muted">units: ${s.question?.units}</div>
+        </div>`;
+      if (s.phase === "ESTIMATE") {
+        inner += `
+          <div class="panel" style="text-align:center">
+            ${s.estimate_locked
+              ? '<span class="badge good">estimate locked</span>'
+              : `<div class="row" style="justify-content:center">
+                  <input id="est" placeholder="your private estimate (positive)" size="18" />
+                  <button class="btn primary" id="lock">Lock estimate</button>
+                </div>`}
+            <div class="err" id="act-err"></div>
+          </div>`;
+      } else if (s.phase === "QUOTE") {
+        const isMyTurn = s.mode === "solo" || s.maker === c.me;
+        if (isMyTurn) {
+          inner += `
+            <div class="panel">
+              <div class="muted" style="font-size:16px">${s.mode === "solo" ? "quote a two-sided market (the computer may pick a side)" : "your turn as maker"} · sizes 1-10 · cap ${s.spread_limit}</div>
+              <div class="row">
+                <input id="qb" placeholder="bid" size="6" /><input id="qa" placeholder="ask" size="6" />
+                <input id="qbs" placeholder="bid size" size="6" /><input id="qas" placeholder="ask size" size="6" />
+                <button class="btn primary" id="quote">Quote</button>
+              </div>
+              <div class="err" id="act-err"></div>
+            </div>`;
+        } else {
+          inner += `<div class="panel"><span class="muted">waiting for ${esc(s.maker)} to quote…</span></div>`;
+        }
+        if (s.my_book) {
+          inner += `<div class="panel"><span class="muted">my book</span> cash ${fmtNum(s.my_book.cash)} · position ${s.my_book.position} · quote points ${fmtNum(s.my_quote_points)}</div>`;
+        }
+      } else if (s.phase === "RESPONSE") {
+        inner += `
+          <div class="panel">
+            <div class="row">
+              <span class="muted">${esc(s.maker)} quoted:</span>
+              <span class="badge bad">bid ${s.quote?.bid} × ${s.quote?.bid_size}</span>
+              <span class="badge good">ask ${s.quote?.ask} × ${s.quote?.ask_size}</span>
+              ${s.maker === c.me ? '<span class="badge accent">waiting for responses</span>' : s.i_responded ? '<span class="badge accent">response locked</span>' : `
+                <button class="btn good" id="buy">BUY @ ${s.quote?.ask}</button>
+                <button class="btn bad" id="sell">SELL @ ${s.quote?.bid}</button>
+                <button class="btn" id="pass">Pass</button>`}
+            </div>
+            <div class="err" id="act-err"></div>
+            <div class="muted">my book: cash ${fmtNum(s.my_book?.cash ?? 0)} · position ${s.my_book?.position ?? 0}</div>
+          </div>`;
+      } else if (s.phase === "SOLO_WAIT") {
+        inner += `<div class="panel">
+          <span class="badge warn">computer action</span>
+          ${s.bot_action ? `<b>${s.bot_action.action}</b> ${s.bot_action.price != null ? "@ " + s.bot_action.price : ""}` : ""}
+          <div class="muted" style="margin-top:4px">my book: cash ${fmtNum(s.my_book?.cash ?? 0)} · position ${s.my_book?.position ?? 0}</div>
+        </div>`;
+      } else if (s.phase === "BOOK" && s.book_question) {
+        const bq = s.book_question;
+        inner += `
+          <div class="panel">
+            <div class="row" style="justify-content:space-between">
+              <span class="badge accent">book question ${bq.question_index}/${bq.question_total}</span>
+              <span class="badge ${bq.history_revealed ? "warn" : ""}">worth ${bq.points} pt${bq.points !== 1 ? "s" : ""}${bq.history_revealed ? " (history revealed)" : ""}</span>
+            </div>
+            <div style="font-weight:700; margin:8px 0">${bq.prompt}</div>
+            <div class="row">
+              <input id="bans" placeholder="your answer" size="16" autocomplete="off" />
+              <button class="btn primary" id="bans-submit">Answer</button>
+              ${!bq.history_revealed ? '<button class="btn warn" id="reveal">Reveal my history (halves points)</button>' : ""}
+            </div>
+            ${bq.history_revealed && s.my_book ? `<div class="panel" style="margin-top:16px"><span class="eyebrow">Your revealed book</span><p>Cash ${fmtNum(s.my_book.cash)} · Position ${s.my_book.position}</p></div>` : ""}
+            <div class="err" id="act-err"></div>
+            <div class="muted" style="margin-top:6px">book points so far: ${fmtNum(s.my_book_points)}</div>
+          </div>`;
+      }
+      board.innerHTML = inner;
+      const err = board.querySelector("#act-err")!;
+      board.querySelector("#lock")?.addEventListener("click", async () => {
+        const out = await c.act("LOCK_ESTIMATE", { value: Number((board.querySelector("#est") as HTMLInputElement).value) });
+        if (!out.accepted) {
+          err.textContent = `rejected: ${out.reason}`;
+          return;
+        }
+        await c.refresh();
+      });
+      board.querySelector("#quote")?.addEventListener("click", async () => {
+        const payload = {
+          bid: Number((board.querySelector("#qb") as HTMLInputElement).value),
+          ask: Number((board.querySelector("#qa") as HTMLInputElement).value),
+          bid_size: Number((board.querySelector("#qbs") as HTMLInputElement).value || 1),
+          ask_size: Number((board.querySelector("#qas") as HTMLInputElement).value || 1),
+        };
+        const out = await c.act("QUOTE", payload);
+        if (!out.accepted) {
+          err.textContent = `rejected: ${out.reason}`;
+          return;
+        }
+        await c.refresh();
+      });
+      const respond = async (action: string) => {
+        const out = await c.act(action, { quantity: 1 });
+        if (!out.accepted) {
+          err.textContent = `rejected: ${out.reason}`;
+          return;
+        }
+        await c.refresh();
+      };
+      board.querySelector("#buy")?.addEventListener("click", () => respond("BUY"));
+      board.querySelector("#sell")?.addEventListener("click", () => respond("SELL"));
+      board.querySelector("#pass")?.addEventListener("click", () => respond("PASS"));
+      board.querySelector("#reveal")?.addEventListener("click", async () => {
+        const out = await c.act("REVEAL_HISTORY");
+        if (!out.accepted) {
+          err.textContent = `rejected: ${out.reason}`;
+          return;
+        }
+        await c.refresh();
+      });
+      const submitAnswer = async () => {
+        const out = await c.act("ANSWER_BOOK_QUESTION", { answer: (board.querySelector("#bans") as HTMLInputElement).value });
+        if (!out.accepted) {
+          err.textContent = `rejected: ${out.reason}`;
+          return;
+        }
+        await c.refresh();
+      };
+      board.querySelector("#bans-submit")?.addEventListener("click", submitAnswer);
+      (board.querySelector("#bans") as HTMLInputElement | null)?.addEventListener("keydown", (e) => e.key === "Enter" && submitAnswer());
+    },
+    renderResults(c: Controller, results: any, box: HTMLElement) {
+      const ans = results.answer || {};
+      const sum = document.createElement("div");
+      sum.className = "panel";
+      sum.innerHTML = `<b>The answer was ${fmtNum(ans.value, 4)} ${ans.units}</b> — ${ans.explanation} <span class="muted">(book settlement z = ${results.z})</span>`;
+      box.appendChild(sum);
+      renderPlayerTable(box, results.players || [], [
+        ["player", "player"],
+        ["quote_points", "quote pts"],
+        ["book_points", "book pts"],
+        ["estimation_bonus", "est bonus"],
+        ["base_score", "base score"],
+        ["rank", "rank"],
+        ["global_points", "global pts"],
+      ]);
+      const det = document.createElement("div");
+      det.className = "panel";
+      det.innerHTML = `<h2 style="margin-top:0">Book truths per player</h2>`;
+      for (const p of results.players || []) {
+        const row = document.createElement("div");
+        row.style.margin = "4px 0";
+        row.innerHTML = `<b>${esc(p.player)}</b> (cash ${fmtNum(p.final_cash)}, pos ${p.final_position}): ` +
+          (p.book_review || []).map((b: any) => `${b.question} → <span class="mono">${JSON.stringify(b.truth)}</span>`).join(" · ");
+        det.appendChild(row);
+      }
+      box.appendChild(det);
+      if ((results.review || []).length) {
+        const rev = document.createElement("div");
+        rev.className = "panel";
+        rev.innerHTML = `<h2 style="margin-top:0">Market review</h2>` +
+          results.review.map((m: any, i: number) => `<div style="margin:4px 0"><span class="badge">${i + 1}</span> maker ${esc(m.maker)}: ${m.bid}/${m.ask} sizes ${m.bid_size}/${m.ask_size}</div>`).join("");
+        box.appendChild(rev);
+      }
+    },
+  });
+</script>

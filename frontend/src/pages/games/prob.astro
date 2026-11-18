@@ -1,0 +1,117 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import SetupPanel from "../../components/SetupPanel.astro";
+const defaults = JSON.stringify({ rounds: 8, bankroll: 100, betting_timer_ms: 30000, result_timer_ms: 8000 });
+---
+<Layout title="Probability Betting" subtitle="premium · solo or 1-300 players">
+  <h1>Probability Betting</h1>
+  <details class="game-rules"><summary>How to play</summary><p class="rules">Find the favorable odds. Enter stakes for the events you want to back, then submit them together. The odds include your returned stake. Your final skill score rewards sound decisions and stakes close to the Kelly target. Leave an event blank to skip it.</p></details>
+  <SetupPanel slug="prob" defaults={defaults} />
+</Layout>
+
+<script>
+  import { mountBoard, fmtNum, renderPlayerTable, type Controller } from "../../lib/api";
+  import { fmtClock, outcomeClass } from "../../lib/logic";
+
+  mountBoard({
+    slug: "prob",
+    defaults: { rounds: 8, bankroll: 100, betting_timer_ms: 30000, result_timer_ms: 8000 },
+    render(c: Controller, board: HTMLElement) {
+      const s = c.state || {};
+      let inner = `
+        <div class="row" style="justify-content:space-between">
+          <span class="badge accent">round ${s.round} / ${s.total_rounds}</span>
+          <span class="timer"><span data-clock>${fmtClock(s.time_remaining_ms ?? 0)}</span> · phase ${s.phase}</span>
+        </div>`;
+      if (s.phase === "BETTING" && !s.acted) {
+        inner += `
+          <div class="panel">
+            <div class="muted" style="font-size:16px">offered events (odds include stake return)</div>
+            ${(s.events || []).map((e: any, i: number) => `
+              <div class="row" style="margin:8px 0">
+                <span style="flex:1">${e.text}</span>
+                <span class="badge good">${e.offered_odds}</span>
+                <input data-event="${e.event_id}" placeholder="stake" size="8" autocomplete="off" />
+              </div>`).join("")}
+            <div class="row" style="margin-top:10px">
+              <button class="btn primary" id="submit">Submit bets</button>
+              <button class="btn" id="pass">Pass round</button>
+            </div>
+            <div class="err" id="act-err"></div>
+          </div>`;
+      } else if (s.phase === "BETTING") {
+        inner += `<div class="panel"><span class="eyebrow">Decision saved</span><h2>Your bets are locked.</h2><p class="muted">Waiting for the other players or the round deadline.</p></div>`;
+      } else if (s.phase === "RESULT") {
+        inner += `
+          <div class="panel">
+            <div class="badge accent">sample</div> <span class="big">${s.sample}</span>
+            <table class="tbl" style="margin-top:8px">
+              <thead><tr><th>event</th><th class="num">stake</th><th>outcome</th><th class="num">profit</th><th class="num">p</th><th class="num">fair</th><th class="num">EV/unit</th><th class="num">target f*</th><th class="num">sizing</th></tr></thead>
+              <tbody>
+                ${(s.my_results || []).map((r: any, i: number) => {
+                  const fb = (s.feedback || [])[i] || {};
+                  return `<tr>
+                    <td>${r.event_id}</td>
+                    <td class="num">${fmtNum(r.stake)}</td>
+                    <td><span class="badge ${outcomeClass(r.outcome)}">${r.outcome}</span></td>
+                    <td class="num" style="color:${r.profit >= 0 ? "var(--good)" : "var(--bad)"}">${fmtNum(r.profit)}</td>
+                    <td class="num">${fb.p != null ? fb.p.toFixed(3) : ""}</td>
+                    <td class="num">${fb.fair_odds ?? ""}</td>
+                    <td class="num">${fb.ev_per_unit != null ? fb.ev_per_unit.toFixed(3) : ""}</td>
+                    <td class="num">${fb.scaled_target != null ? fb.scaled_target.toFixed(3) : ""}</td>
+                    <td class="num">${r.sizing_score ?? ""}</td>
+                  </tr>`;
+                }).join("")}
+              </tbody>
+            </table>
+          </div>`;
+      }
+      inner += `
+        <div class="grid3">
+          <div class="panel"><div class="muted">balance</div><div class="big" style="color:var(--accent)">${fmtNum(s.balance ?? 0)}</div></div>
+          <div class="panel" style="grid-column: span 2"><div class="muted">history</div>
+            ${(s.history || []).slice(-4).reverse().map((h: any) => `
+              <div style="margin:2px 0"><span class="badge">${h.round}</span> sample: <b>${h.sample}</b>
+                ${(h.results || []).map((r: any) => `<span class="badge ${outcomeClass(r.outcome)}">${r.event_id} ${fmtNum(r.profit)}</span>`).join(" ")}
+              </div>`).join("") || '<span class="muted">no rounds yet</span>'}
+          </div>
+        </div>`;
+      board.innerHTML = inner;
+      const err = board.querySelector("#act-err")!;
+      const submit = async () => {
+        const bets: any[] = [];
+        board.querySelectorAll("input[data-event]").forEach((inp) => {
+          const el = inp as HTMLInputElement;
+          const v = Number(el.value);
+          if (el.value.trim() !== "") bets.push({ event_id: el.dataset.event, stake: v });
+        });
+        if (bets.some(b => !Number.isFinite(b.stake) || b.stake <= 0)) { err.textContent = "Each entered stake must be a positive number."; return; }
+        if (bets.reduce((total, b) => total + b.stake, 0) > s.balance) { err.textContent = "Your total stakes exceed your bankroll."; return; }
+        const out = await c.act("SUBMIT_BETS", { bets });
+        if (!out.accepted) {
+          err.textContent = `rejected: ${out.reason}`;
+          return;
+        }
+        await c.refresh();
+      };
+      board.querySelector("#submit")?.addEventListener("click", submit);
+      board.querySelector("#pass")?.addEventListener("click", async () => {
+        const out = await c.act("PASS");
+        if (!out.accepted) err.textContent = `rejected: ${out.reason}`;
+        else await c.refresh();
+      });
+    },
+    renderResults(c: Controller, results: any, box: HTMLElement) {
+      renderPlayerTable(box, results.players || [], [
+        ["player", "player"],
+        ["skill", "skill (3D+7E)"],
+        ["decision_fraction", "decisions"],
+        ["sizing_average", "sizing"],
+        ["final_balance", "balance"],
+        ["rank", "rank"],
+        ["global_points", "global pts"],
+        ["length_bonus", "length bonus"],
+      ]);
+    },
+  });
+</script>

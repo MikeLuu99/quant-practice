@@ -1,0 +1,92 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import SetupPanel from "../../components/SetupPanel.astro";
+const defaults = JSON.stringify({ duration_ms: 300000, stock_count: 3, quote_step_ms: 5000, arb_probability: 0.25, news_probability: 0.35 });
+---
+<Layout title="ETF Trading Challenge" subtitle="premium · solo or 1-50 players">
+  <h1>ETF Trading Challenge</h1>
+  <details class="game-rules"><summary>How to play</summary><p class="rules">Find the mismatch between an ETF and its stocks. Buying the ETF also sells the stock basket; selling the ETF buys the basket. Each trade locks in the displayed price difference instantly. Prices reset after a fill, so check the current quotes before trading.</p></details>
+  <SetupPanel slug="etf" defaults={defaults} />
+</Layout>
+
+<script>
+  import { mountBoard, fmtNum, renderPlayerTable, type Controller } from "../../lib/api";
+  import { fmtClock } from "../../lib/logic";
+
+  mountBoard({
+    slug: "etf",
+    defaults: { duration_ms: 300000, stock_count: 3, quote_step_ms: 5000, arb_probability: 0.25, news_probability: 0.35 },
+    render(c: Controller, board: HTMLElement) {
+      const s = c.state || {};
+      const me = s.me || {};
+      const etf = s.etf || {};
+      const acc = me.accuracy ?? 0;
+      const basketBid = (s.stocks || []).reduce((t: number, q: any) => t + q.bid, 0);
+      const basketAsk = (s.stocks || []).reduce((t: number, q: any) => t + q.ask, 0);
+      board.innerHTML = `
+        <div class="row" style="justify-content:space-between">
+          <span class="timer">time left <b><span data-clock>${fmtClock(s.time_remaining_ms ?? 0)}</span></b> · quote v${s.market_version}</span>
+          <span class="badge ${s.news === "news" ? "warn" : s.news === "normal" ? "accent" : ""}">${s.news || "quiet"}</span>
+        </div>
+        <div class="grid2">
+          <div class="panel">
+            <div class="muted" style="font-size:16px">stocks</div>
+            <table class="tbl">
+              <thead><tr><th>id</th><th class="num">bid</th><th class="num">ask</th></tr></thead>
+              <tbody>
+                ${(s.stocks || []).map((q: any) => `<tr><td>${q.id}</td><td class="num">${q.bid}</td><td class="num">${q.ask}</td></tr>`).join("")}
+                <tr><td class="muted">basket</td><td class="num muted">${basketBid}</td><td class="num muted">${basketAsk}</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="panel">
+            <div class="muted" style="font-size:16px">${etf.id} (1 share each: ${Array.from({ length: (s.stocks || []).length }, (_, i) => "S" + (i + 1)).join(", ")})</div>
+            <div class="row" style="margin:8px 0">
+              <span class="badge bad">bid ${etf.bid}</span>
+              <span class="badge good">ask ${etf.ask}</span>
+            </div>
+            <div class="muted">buy arb: ${fmtNum(basketBid - (etf.ask ?? 0))} · sell arb: ${fmtNum((etf.bid ?? 0) - basketAsk)}</div>
+            <div class="row" style="margin-top:10px">
+              <button class="btn good" id="buy">BUY_ETF @ ${etf.ask}</button>
+              <button class="btn bad" id="sell">SELL_ETF @ ${etf.bid}</button>
+            </div>
+            <div class="err" id="act-err"></div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="row">
+            <span class="muted">your book</span>
+            <span class="badge">total <b style="color:${(me.total_profit ?? 0) >= 0 ? "var(--good)" : "var(--bad)"}">${fmtNum(me.total_profit ?? 0)}</b></span>
+            <span class="badge warn">news ${fmtNum(me.news_profit ?? 0)}</span>
+            <span class="badge accent">normal ${fmtNum(me.normal_profit ?? 0)}</span>
+            <span class="muted">trades ${me.trades ?? 0} · profitable ${me.profitable_trades ?? 0} · accuracy ${(acc * 100).toFixed(0)}%</span>
+          </div>
+        </div>`;
+      const err = board.querySelector("#act-err")!;
+      const trade = async (action: string) => {
+        const out = await c.act(action, { etf_id: "E1", quantity: 1 });
+        if (!out.accepted) {
+          err.textContent = `rejected: ${out.reason}`;
+          return;
+        }
+        err.textContent = "";
+        await c.refresh();
+      };
+      board.querySelector("#buy")?.addEventListener("click", () => trade("BUY_ETF"));
+      board.querySelector("#sell")?.addEventListener("click", () => trade("SELL_ETF"));
+    },
+    renderResults(c: Controller, results: any, box: HTMLElement) {
+      renderPlayerTable(box, results.players || [], [
+        ["player", "player"],
+        ["total_profit", "total profit"],
+        ["news_profit", "news"],
+        ["normal_profit", "normal"],
+        ["trades", "trades"],
+        ["profitable_trades", "profitable"],
+        ["accuracy", "accuracy"],
+        ["rank", "rank"],
+        ["global_points", "global pts"],
+      ]);
+    },
+  });
+</script>

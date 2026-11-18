@@ -1,0 +1,70 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import SetupPanel from "../../components/SetupPanel.astro";
+const defaults = JSON.stringify({ prep_ms: 10000, quote_timer_ms: 20000, response_timer_ms: 12000, center_count: 3, max_spread: 20 });
+---
+<Layout title="Market of Cards" subtitle="1–15 players · solo with computer traders">
+  <h1>Market of Cards</h1>
+  <details class="game-rules"><summary>How to play</summary><p class="rules">The market settles at the sum of every dealt card: your hand, the other hands, and the center. Aces count as 1; face cards as 11, 12, 13. Take turns quoting a bid and ask. Buy if you think the total is higher, sell if it is lower. The first trade fills the market.</p></details>
+  <SetupPanel slug="cards" defaults={defaults} />
+</Layout>
+<script>
+  import { mountBoard, fmtNum, renderPlayerTable, type Controller } from "../../lib/api";
+  import { fmtClock, escapeHTML as esc } from "../../lib/logic";
+  import { playingCard } from "../../lib/cards";
+  mountBoard({
+    slug: "cards", defaults: { prep_ms: 10000, quote_timer_ms: 20000, response_timer_ms: 12000, center_count: 3, max_spread: 20 },
+    render(c: Controller, board: HTMLElement) {
+      const s = c.state || {};
+      const q = s.quote;
+      const b = s.my_book || {};
+      const isMaker = s.active_maker === c.me;
+      const phases: Record<string,string> = { PREP: "Study your hand", QUOTE: "Make a market", RESPONSE: "Trade the market", DONE: "The table is settled" };
+      const center = Array.from({ length: s.center_count ?? 3 }, (_, i) => playingCard(s.revealed_center?.[i]));
+      const opponents = (s.players || []).filter((p: string) => p !== c.me);
+      board.innerHTML = `
+        <div class="row" style="justify-content:space-between"><span class="eyebrow">Rotation ${s.rotation} / ${s.center_count ?? 3} · ${phases[s.phase] || s.phase}</span><span class="timer"><span data-clock>${fmtClock(s.time_remaining_ms ?? 0)}</span> remaining</span></div>
+        <div class="board-columns">
+          <div class="card-table">
+            <div class="opponents">${opponents.map((p: string) => `<div class="seat ${s.active_maker === p ? "is-maker" : ""}"><div class="card-hand">${playingCard(null,"small")}${playingCard(null,"small")}</div><div class="seat-name">${esc(p)}${s.active_maker === p ? " / MAKER" : ""}</div></div>`).join("")}</div>
+            <div class="community"><span class="eyebrow">The center · ${s.revealed_count} of ${s.center_count ?? 3} revealed</span><div class="card-hand">${center.join("")}</div></div>
+            <hr class="table-divider"/><div class="table-caption">Your private hand</div>
+            <div class="card-hand fan">${(s.my_hand || []).map((card: any) => playingCard(card)).join("")}</div>
+            <div class="table-caption">${esc(c.me)}${isMaker ? " / YOU ARE THE MAKER" : ""}</div>
+            <div class="book-strip"><span>CASH ${fmtNum(b.cash ?? 0)}</span><span>POSITION ${b.position > 0 ? "+" : ""}${b.position ?? 0}</span></div>
+          </div>
+          <div>
+            <div class="trade-panel">
+              <span class="eyebrow">${isMaker ? "Your market" : `Maker / ${esc(s.active_maker || "—")}`}</span>
+              <h2>${s.phase === "PREP" ? "Find your edge." : isMaker && s.phase === "QUOTE" ? "Name your prices." : "Read the market."}</h2>
+              ${s.phase === "PREP" ? '<p class="muted">Study your two cards. The other hands stay private. Center cards reveal after each maker rotation.</p>' : ""}
+              ${s.phase === "QUOTE" && isMaker ? `
+                <p class="muted">Quote one unit on each side. Maximum spread: ${s.max_spread ?? 20}.</p>
+                <div class="quote-display"><label class="quote-side"><span class="eyebrow">Your bid</span><input class="quote-input" id="qb" inputmode="numeric" placeholder="0" aria-label="Your bid"/></label><label class="quote-side"><span class="eyebrow">Your ask</span><input class="quote-input" id="qa" inputmode="numeric" placeholder="0" aria-label="Your ask"/></label></div>
+                <button class="btn primary full-width" id="quote">Publish quote ↗</button>` : q ? `
+                <div class="quote-display"><div class="quote-side"><span class="eyebrow">Bid / sell at</span><span class="quote-number">${q.bid}</span></div><div class="quote-side"><span class="eyebrow">Ask / buy at</span><span class="quote-number">${q.ask}</span></div></div>
+                ${s.phase === "RESPONSE" && !isMaker && !s.responded ? `<div class="trade-actions"><button class="btn good" id="buy">Buy @ ${q.ask}</button><button class="btn" id="sell">Sell @ ${q.bid}</button><button class="btn" id="pass">Pass</button></div>` : `<p class="muted">${s.responded ? "Your response is locked." : "Waiting for the other players to respond."}</p>`}` : s.phase === "QUOTE" ? `<p class="muted">Waiting for ${esc(s.active_maker)} to publish a quote.</p>` : ""}
+              <div class="err" id="act-err"></div>
+            </div>
+            <div class="panel" style="margin-top:20px"><span class="eyebrow">The trade ledger</span><ul class="activity-list">${(s.ledger || []).slice(-6).reverse().map((l: any) => `<li><span>${esc(l.responder)} ${l.side.toLowerCase()}<br/><span class="muted">vs. ${esc(l.maker)}</span></span><span>@ ${l.price}</span></li>`).join("") || '<li class="muted">The first trade is yours to make.</li>'}</ul></div>
+          </div>
+        </div>`;
+      board.querySelector("#quote")?.addEventListener("click", async () => {
+        const bid = (board.querySelector("#qb") as HTMLInputElement).value.trim();
+        const ask = (board.querySelector("#qa") as HTMLInputElement).value.trim();
+        if (!bid || !ask) { board.querySelector("#act-err")!.textContent = "Enter both a bid and an ask."; return; }
+        await c.act("QUOTE", { bid: Number(bid), ask: Number(ask) }); await c.refresh();
+      });
+      for (const side of ["buy", "sell", "pass"]) board.querySelector(`#${side}`)?.addEventListener("click", async () => {
+        await c.act(side.toUpperCase(), { quantity: 1 }); await c.refresh();
+      });
+    },
+    renderResults(c, results, box) {
+      const summary = document.createElement("div"); summary.className = "panel";
+      summary.innerHTML = `<span class="eyebrow">Final table value</span><div class="big">${results.value}</div><div class="card-hand" style="justify-content:flex-start;margin-top:16px">${(results.center || []).map((card: any) => playingCard(card)).join("")}</div>`; box.appendChild(summary);
+      renderPlayerTable(box, results.players || [], [["player","Player"],["cash","Cash"],["position","Position"],["profit","Profit"],["rank","Rank"],["global_points","Points"]]);
+      const hands = document.createElement("div"); hands.className = "panel";
+      hands.innerHTML = `<h3>All hands revealed</h3>${Object.entries(results.hands || {}).map(([p,h]: any) => `<div class="reveal-hand"><span class="mono">${esc(p)}</span>${h.map((card: any) => playingCard(card, "small")).join("")}</div>`).join("")}`; box.appendChild(hands);
+    },
+  });
+</script>

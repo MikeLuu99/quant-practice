@@ -1,0 +1,31 @@
+---
+import "../styles/global.css";
+interface Props { title: string; subtitle?: string }
+const { title, subtitle } = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="theme-color" content="#F0EBDE" />
+    <title>{title} · Quant Practice</title>
+    <meta name="description" content="Practice probability, mental math, trading intuition and cognitive skills with market games, company assessments and focused trainers." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Hanken+Grotesk:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;1,6..72,400&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="topbar">
+      <a href="/" class="brand" aria-label="Quant Practice home"><span class="brand-mark" aria-hidden="true">▦</span> QUANT PRACTICE</a>
+      <nav aria-label="Main navigation"><a href="/" aria-current={title === "Home" ? "page" : undefined}>Home</a><a href="/games/" aria-current={title === "Games" ? "page" : undefined}>Games</a><a href="/assessment/" aria-current={title === "Assessments" ? "page" : undefined}>Assessments</a><a href="/trainer/" aria-current={title === "Trainers" ? "page" : undefined}>Trainers</a></nav>
+    </header>
+    <main class="container" id="main">
+      {subtitle && <div class="game-masthead"><a href="/games/">← All games</a><span>{subtitle.replace("premium · ", "").replace("free · ", "")}</span></div>}
+      <slot />
+    </main>
+    <footer class="foot"><a href="/">QUANT PRACTICE</a><span>Practice. Review. Improve.</span></footer>
+  </body>
+</html>

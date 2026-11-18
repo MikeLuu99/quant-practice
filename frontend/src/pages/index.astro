@@ -1,0 +1,15 @@
+---
+import Layout from '../layouts/Layout.astro';
+import '../styles/home.css';
+import {playingCard} from '../lib/cards';
+import {companyLogo} from '../lib/company-brands';
+---
+<Layout title="Home">
+ <section class="home-hero"><div><span class="eyebrow">Practice for quant interviews</span><h1>Think clearly.<br/><em>Find your edge.</em></h1><p>Games, company assessments, and focused skill training.</p><div class="home-hero-actions"><a href="#practice-rooms" class="btn primary">Explore practice ↓</a><a href="/trainer/" class="btn">Quick drill ↗</a></div></div><div class="home-visual" aria-hidden="true"><div class="home-visual-label"><span>THE DAILY PRACTICE</span><span>01—03</span></div><div class="home-equation">P(edge) <i>↑</i></div><svg viewBox="0 0 360 180"><path class="home-chart-grid" d="M0 30H360M0 80H360M0 130H360M30 0V180M90 0V180M150 0V180M210 0V180M270 0V180M330 0V180"/><path class="home-chart" d="M0 160L45 145L85 150L125 105L165 120L210 70L250 85L300 30L350 10"/></svg><div class="home-cards" set:html={playingCard({label:'AS'})+playingCard({label:'QH'})+playingCard({label:'7D'})}></div></div></section>
+ <section id="practice-rooms" aria-label="Choose a practice area"><div class="home-section-heading"><h2>Three ways to get sharper.</h2></div><div class="home-rooms">
+  <a class="home-room" href="/games/"><span class="eyebrow">01 / The game floor</span><div class="home-room-art home-market" aria-hidden="true"><span>BID <b>99</b></span><i>↔</i><span>ASK <b>101</b></span></div><h3>Games</h3><p>Quote prices, manage positions, and test your trading decisions.</p><div class="home-room-footer"><span>9 interactive games</span><b>Play a game ↗</b></div></a>
+  <a class="home-room" href="/assessment/"><span class="eyebrow">02 / The interview room</span><div class="home-room-art home-firms" aria-hidden="true"><span set:html={companyLogo('maven','Maven Securities')}/><span set:html={companyLogo('akuna','Akuna Capital')}/><span set:html={companyLogo('sig','SIG')}/></div><h3>Assessments</h3><p>Practice company formats with previews, full tests, or custom settings.</p><div class="home-room-footer"><span>11 firms · 25 formats</span><b>Prepare by firm ↗</b></div></a>
+  <a class="home-room" href="/trainer/"><span class="eyebrow">03 / The training floor</span><div class="home-room-art home-training" aria-hidden="true"><span>⅝</span><i>→</i><span>0.625</span></div><h3>Trainers</h3><p>Build mental math, probability, trading, and cognitive skills.</p><div class="home-room-footer"><span>22 focused trainers</span><b>Build a skill ↗</b></div></a>
+ </div></section>
+ <p class="home-note">Independent practice content. Not affiliated with the companies shown.</p>
+</Layout>

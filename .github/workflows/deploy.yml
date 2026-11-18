@@ -1,0 +1,50 @@
+name: Deploy Quant Practice
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      environment:
+        type: choice
+        options: [staging, production]
+        default: staging
+        description: Target Cloudflare environment
+permissions:
+  contents: read
+concurrency:
+  group: deploy-${{ inputs.environment || 'staging' }}
+  cancel-in-progress: false
+jobs:
+  verify:
+    uses: ./.github/workflows/ci.yml
+    with:
+      mode: ${{ inputs.environment || 'staging' }}
+  deploy:
+    if: github.event_name == 'workflow_dispatch' || vars.CLOUDFLARE_DEPLOY_ENABLED == 'true'
+    needs: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: ${{ inputs.environment || 'staging' }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '26'
+          package-manager-cache: false
+      - run: |
+          if [ -f package-lock.json ]; then npm ci; else npm install; fi
+      - uses: actions/download-artifact@v8
+        with:
+          name: quant-practice-${{ inputs.environment || 'staging' }}
+          path: .cloudflare/output/v1/
+      - name: Deploy the already-verified build
+        run: npm run "deploy:$QUANT_MODE"
+        env:
+          QUANT_MODE: ${{ inputs.environment || 'staging' }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      - name: Verify the deployed application
+        run: node scripts/smoke-deployment.mjs
+        env:
+          QUANT_BASE_URL: ${{ vars.QUANT_BASE_URL }}
+          QUANT_EXPECTED_REVISION: ${{ github.sha }}

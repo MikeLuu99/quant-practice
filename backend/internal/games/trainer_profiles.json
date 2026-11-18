@@ -1,0 +1,524 @@
+[
+  {
+    "spec_id": "T01",
+    "id": "math",
+    "title": "Math Trainer",
+    "category": "Numerical",
+    "modes": [
+      "practice"
+    ],
+    "duration_ms": 120000,
+    "rounds": 0,
+    "score_kind": "net_rate",
+    "games": [
+      "math",
+      "fruit"
+    ],
+    "assessments": [
+      "maven-numerical-new",
+      "akuna-math"
+    ],
+    "source": "https://www.tradermath.org/tradermath-math-trainer/dashboard",
+    "description": "Practice arithmetic with typed or multiple-choice answers.",
+    "rules_version": "trainer-runtime-v1",
+    "content_origin": "Original practice content",
+    "proposed": "Original question bank, timing details, adaptation steps and case rubrics are versioned implementation choices where the source is silent.",
+    "reviewed_on": "2026-11-17"
+  },
+  {
+    "spec_id": "T02",
+    "id": "sequence",
+    "title": "Sequence Trainer",
+    "category": "Numerical",
+    "modes": [
+      "numbers",
+      "letters"
+    ],
+    "duration_ms": 60000,
+    "rounds": 0,
+    "score_kind": "net_rate",
+    "games": [],
+    "assessments": [
+      "maven-sequences-new",
+      "flow-sequences"
+    ],
+    "source": "https://www.tradermath.org/tradermath-sequence-trainer/dashboard",
+    "description": "Continue number or letter patterns; optional skips stay separate from attempts.",
+    "rules_version": "trainer-runtime-v1",
+    "content_origin": "Original practice content",
+    "proposed": "Original question bank, timing details, adaptation steps and case rubrics are versioned implementation choices where the source is silent.",
+    "reviewed_on": "2026-11-17"
+  },
+  {
+    "spec_id": "T03",
+    "id": "fractions",
+    "title": "Fractions to Decimals",
+    "category": "Numerical",
+    "modes": [
+      "practice",
+      "test"
+    ],
+    "duration_ms": 0,
+    "rounds": 20,
+    "score_kind": "fraction_net",
+    "games": [
+      "math"
+    ],
+    "assessments": [
+      "flow-math"
+    ],
+    "source": "https://www.tradermath.org/fractions-to-decimals/dashboard",
+    "description": "Learn exact recurring-decimal rounding, then test five-digit recall.",
+    "rules_version": "trainer-runtime-v1",
+    "content_origin": "Original practice content",
+    "proposed": "Original question bank, timing details, adaptation steps and case rubrics are versioned implementation choices where the source is silent.",
+    "reviewed_on": "2026-11-17"
+  },
+  {
+    "spec_id": "T04",
+    "id": "etf",
+    "title": "ETF Market Making",
+    "category": "Trading",
+    "modes": [
+      "learn",
+      "price",
+      "hedge",
+      "arbitrage",
+      "case"
+    ],
+    "duration_ms": 0,
+    "rounds": 10,
+    "score_kind": "knowledge",
+    "games": [
+      "etf"
+    ],
+    "assessments": [
+      "sig-equity"
+    ],
+    "source": "https://www.tradermath.org/trainers/etf-strategy/dashboard",
+    "description": "Basket pricing, hedging, executable arbitrage and a nine-screen original case.",
+    "rules_version": "trainer-runtime-v1",
+    "content_origin": "Original practice content",
+    "proposed": "Original question bank, timing details, adaptation steps and case rubrics are versioned implementation choices where the source is silent.",
+    "reviewed_on": "2026-11-17"
+  },
+  {
+    "spec_id": "T05",
+    "id": "options",
+    "title": "Options Market Making",
+    "category": "Trading",
+    "modes": [
+      "learn",
+      "pricing",
+      "parity",
+      "greeks",
+      "case"
+    ],
+    "duration_ms": 0,
+    "rounds": 10,
+    "score_kind": "knowledge",
+    "games": [
+      "makeme"
+    ],
+    "assessments": [
+      "sig-equity"
+    ],
+    "source": "https://www.tradermath.org/trainers/options-strategy/dashboard",
+    "description": "Option payoffs, parity, book Greeks and delta hedging.",
+    "rules_version": "trainer-runtime-v1",
+    "content_origin": "Original practice content",
+    "proposed": "Original question bank, timing details, adaptation steps and case rubrics are versioned implementation choices where the source is silent.",
+    "reviewed_on": "2026-11-17"
+  },
+  {
+    "spec_id": "T06",
+    "id": "futures",
+    "title": "Futures & Basis",
+    "category": "Trading",
+    "modes": [
+      "learn",
+      "fair_value",
+      "carry",
+      "arbitrage",
+      "case"
+    ],
+    "duration_ms": 0,
+    "rounds": 10,
+    "score_kind": "knowledge",
+    "games": [
+      "etf"
+    ],
+    "assessments": [
+      "sig-equity"
+    ],
+    "source": "https://www.tradermath.org/trainers/futures-basis/dashboard",
+    "description": "Carry, basis, executable cash-and-carry and expiry accounting.",
+    "rules_version": "trainer-runtime-v1",
+    "content_origin": "Original practice content",
+    "proposed": "Original question bank, timing details, adaptation steps and case rubrics are versioned implementation choices where the source is silent.",
+    "reviewed_on": "2026-11-17"
+  },
+  {
+    "spec_id": "T07",
+    "id": "prediction",
+    "title": "Prediction Markets",
+    "category": "Trading",
+    "modes": [
+      "learn",
+      "probability",
+      "locks",
+      "quoting",
+      "case"
+    ],
+    "duration_ms": 0,
+    "rounds": 10,
+    "score_kind": "knowledge",
+    "games": [
+      "prob",
+      "marble"
+    ],
+    "assessments": [
+      "citadel-trading"
+    ],
+    "source": "https://www.tradermath.org/trainers/prediction-markets/dashboard",
+    "description": "Event probabilities, complementary locks, quote skew and collateral.",
+    "rules_version": "trainer-runtime-v1",
+    "content_origin": "Original practice content",
+    "proposed": "Original question bank, timing details, adaptation steps and case rubrics are versioned implementation choices where the source is silent.",
+    "reviewed_on": "2026-11-17"
+  },
+  {
+    "spec_id": "T08",
+    "id": "probability",
+    "title": "Probability Trainer",
+    "category": "Probability & Statistics",
+    "modes": [
+      "practice"
+    ],
+    "duration_ms": 180000,
+    "rounds": 0,
+    "score_kind": "accuracy",
+    "games": [
+      "prob",
+      "nextcard",
+      "cards"
+    ],
+    "assessments": [
+      "drw-assessment",
+      "maven-probability-new"
+    ],
+    "source": "https://www.tradermath.org/tradermath-probability-trainer/dashboard",
+    "description": "Exact probabilities, Bayes, expectations, counting and statistics.",
+    "rules_version": "trainer-runtime-v1",
+    "content_origin": "Original practice content",
+    "proposed": "Original question bank, timing details, adaptation steps and case rubrics are versioned implementation choices where the source is silent.",
+    "reviewed_on": "2026-11-17"
+  },
+  {
+    "spec_id": "T09",
+    "id": "fermi",
+    "title": "Fermi Questions",
+    "category": "Estimation",
+    "modes": [
+      "library"
+    ],
+    "duration_ms": 0,
+    "rounds": 1,
+    "score_kind": "factor_error",
+    "games": [
+      "fermi",
+      "makeme"
+    ],
+    "assessments": [
+      "maven-interval"
+    ],
+    "source": "https://www.tradermath.org/fermi-questions",
+    "description": "A searchable frozen fact library with hints, scratchpad and worked answers.",
+    "rules_version": "trainer-runtime-v1",
+    "content_origin": "Original practice content",
+    "proposed": "Original question bank, timing details, adaptation steps and case rubrics are versioned implementation choices where the source is silent.",
+    "reviewed_on": "2026-11-17"
+  },
+  {
+    "spec_id": "T10",
+    "id": "task-switch",
+    "title": "Task Switch",
+    "category": "Cognitive",
+    "modes": [
+      "classic",
+      "realistic"
+    ],
+    "duration_ms": 180000,
+    "rounds": 0,
+    "score_kind": "net_rate",
+    "games": [],
+    "assessments": [
+      "ctc-cognitive"
+    ],
+    "source": "https://www.tradermath.org/task-switch/dashboard",
+    "description": "Read the active rule and classify letters/numbers or arrows/arithmetic.",
+    "rules_version": "trainer-runtime-v1",
+    "content_origin": "Original practice content",
+    "proposed": "Original question bank, timing details, adaptation steps and case rubrics are versioned implementation choices where the source is silent.",
+    "reviewed_on": "2026-11-17"
+  },
+  {
+    "spec_id": "T11",
+    "id": "response-conflict",
+    "title": "Response Conflict",
+    "category": "Cognitive",
+    "modes": [
+      "flanker",
+      "simon"
+    ],
+    "duration_ms": 60000,
+    "rounds": 0,
+    "score_kind": "net_rate",
+    "games": [],
+    "assessments": [
+      "ctc-cognitive"
+    ],
+    "source": "https://www.tradermath.org/response-conflict/dashboard",
+    "description": "Answer the central letter or mapped shape while ignoring distractors.",
+    "rules_version": "trainer-runtime-v1",
+    "content_origin": "Original practice content",
+    "proposed": "Original question bank, timing details, adaptation steps and case rubrics are versioned implementation choices where the source is silent.",
+    "reviewed_on": "2026-11-17"
+  },
+  {
+    "spec_id": "T12",
+    "id": "pincode",
+    "title": "Pincode Game",
+    "category": "Cognitive",
+    "modes": [
+      "repeat",
+      "reverse",
+      "sort"
+    ],
+    "duration_ms": 60000,
+    "rounds": 0,
+    "score_kind": "net_rate",
+    "games": [],
+    "assessments": [],
+    "source": "https://www.tradermath.org/pincode-game/dashboard",
+    "description": "Encode flashing digits, then repeat, reverse or sort without losing zeros.",
+    "rules_version": "trainer-runtime-v1",
+    "content_origin": "Original practice content",
+    "proposed": "Original question bank, timing details, adaptation steps and case rubrics are versioned implementation choices where the source is silent.",
+    "reviewed_on": "2026-11-17"
+  },
+  {
+    "spec_id": "T13",
+    "id": "cube",
+    "title": "Cube Folding",
+    "category": "Cognitive",
+    "modes": [
+      "mixed"
+    ],
+    "duration_ms": 120000,
+    "rounds": 0,
+    "score_kind": "net_rate",
+    "games": [],
+    "assessments": [
+      "mako-aptitude"
+    ],
+    "source": "https://www.tradermath.org/cube-folding",
+    "description": "Fold a six-face net and select one of five views using proper rotations.",
+    "rules_version": "trainer-runtime-v1",
+    "content_origin": "Original practice content",
+    "proposed": "Original question bank, timing details, adaptation steps and case rubrics are versioned implementation choices where the source is silent.",
+    "reviewed_on": "2026-11-17"
+  },
+  {
+    "spec_id": "T14",
+    "id": "code-match",
+    "title": "Code Match",
+    "category": "Cognitive",
+    "modes": [
+      "standard",
+      "pressure"
+    ],
+    "duration_ms": 0,
+    "rounds": 30,
+    "score_kind": "correct_count",
+    "games": [],
+    "assessments": [
+      "ctc-cognitive"
+    ],
+    "source": "https://www.tradermath.org/code-match/dashboard",
+    "description": "Match strings exactly against a shrinking response window.",
+    "rules_version": "trainer-runtime-v1",
+    "content_origin": "Original practice content",
+    "proposed": "Original question bank, timing details, adaptation steps and case rubrics are versioned implementation choices where the source is silent.",
+    "reviewed_on": "2026-11-17"
+  },
+  {
+    "spec_id": "T15",
+    "id": "grid-recall",
+    "title": "Grid Recall",
+    "category": "Cognitive",
+    "modes": [
+      "standard",
+      "sequential"
+    ],
+    "duration_ms": 0,
+    "rounds": 20,
+    "score_kind": "recall",
+    "games": [],
+    "assessments": [],
+    "source": "https://www.tradermath.org/grid-recall/dashboard",
+    "description": "Remember blue cells, reject red decoys, and grow your adaptive span.",
+    "rules_version": "trainer-runtime-v1",
+    "content_origin": "Original practice content",
+    "proposed": "Original question bank, timing details, adaptation steps and case rubrics are versioned implementation choices where the source is silent.",
+    "reviewed_on": "2026-11-17"
+  },
+  {
+    "spec_id": "T16",
+    "id": "intercept",
+    "title": "Intercept",
+    "category": "Cognitive",
+    "modes": [
+      "standard",
+      "occluded"
+    ],
+    "duration_ms": 0,
+    "rounds": 30,
+    "score_kind": "hits",
+    "games": [],
+    "assessments": [],
+    "source": "https://www.tradermath.org/intercept/dashboard",
+    "description": "Lead a falling target using four cannons with real projectile travel.",
+    "rules_version": "trainer-runtime-v1",
+    "content_origin": "Original practice content",
+    "proposed": "Original question bank, timing details, adaptation steps and case rubrics are versioned implementation choices where the source is silent.",
+    "reviewed_on": "2026-11-17"
+  },
+  {
+    "spec_id": "T17",
+    "id": "hold-fire",
+    "title": "Hold Fire",
+    "category": "Cognitive",
+    "modes": [
+      "standard",
+      "switching"
+    ],
+    "duration_ms": 0,
+    "rounds": 60,
+    "score_kind": "balanced_accuracy",
+    "games": [],
+    "assessments": [],
+    "source": "https://www.tradermath.org/hold-fire/dashboard",
+    "description": "Press for targets, withhold for non-targets, and follow changing cue rules.",
+    "rules_version": "trainer-runtime-v1",
+    "content_origin": "Original practice content",
+    "proposed": "Original question bank, timing details, adaptation steps and case rubrics are versioned implementation choices where the source is silent.",
+    "reviewed_on": "2026-11-17"
+  },
+  {
+    "spec_id": "T18",
+    "id": "target-number",
+    "title": "Target Number",
+    "category": "Cognitive",
+    "modes": [
+      "practice",
+      "timed"
+    ],
+    "duration_ms": 0,
+    "rounds": 10,
+    "score_kind": "solves_less_skips",
+    "games": [
+      "math"
+    ],
+    "assessments": [],
+    "source": "https://www.tradermath.org/target-number/dashboard",
+    "description": "Use all four tiles exactly once with integer-only pair reductions.",
+    "rules_version": "trainer-runtime-v1",
+    "content_origin": "Original practice content",
+    "proposed": "Original question bank, timing details, adaptation steps and case rubrics are versioned implementation choices where the source is silent.",
+    "reviewed_on": "2026-11-17"
+  },
+  {
+    "spec_id": "T19",
+    "id": "pump",
+    "title": "Pump",
+    "category": "Cognitive",
+    "modes": [
+      "manual",
+      "stakes"
+    ],
+    "duration_ms": 0,
+    "rounds": 30,
+    "score_kind": "bank",
+    "games": [],
+    "assessments": [],
+    "source": "https://www.tradermath.org/pump/dashboard",
+    "description": "Bank simulated cents before a hidden, nonrepeating threshold pops the balloon.",
+    "rules_version": "trainer-runtime-v1",
+    "content_origin": "Original practice content",
+    "proposed": "Original question bank, timing details, adaptation steps and case rubrics are versioned implementation choices where the source is silent.",
+    "reviewed_on": "2026-11-17"
+  },
+  {
+    "spec_id": "T20",
+    "id": "skyline",
+    "title": "Skyline",
+    "category": "Cognitive",
+    "modes": [
+      "open",
+      "capped"
+    ],
+    "duration_ms": 0,
+    "rounds": 10,
+    "score_kind": "planning",
+    "games": [],
+    "assessments": [],
+    "source": "https://www.tradermath.org/skyline/dashboard",
+    "description": "Rearrange top floors to a target and compare your moves with a BFS optimum.",
+    "rules_version": "trainer-runtime-v1",
+    "content_origin": "Original practice content",
+    "proposed": "Original question bank, timing details, adaptation steps and case rubrics are versioned implementation choices where the source is silent.",
+    "reviewed_on": "2026-11-17"
+  },
+  {
+    "spec_id": "T21",
+    "id": "mystery",
+    "title": "Mystery Figure",
+    "category": "Cognitive",
+    "modes": [
+      "standard",
+      "deep"
+    ],
+    "duration_ms": 0,
+    "rounds": 5,
+    "score_kind": "deduction",
+    "games": [],
+    "assessments": [],
+    "source": "https://www.tradermath.org/mystery-figure/dashboard",
+    "description": "Infer hidden attributes from count-only feedback and visible guess history.",
+    "rules_version": "trainer-runtime-v1",
+    "content_origin": "Original practice content",
+    "proposed": "Original question bank, timing details, adaptation steps and case rubrics are versioned implementation choices where the source is silent.",
+    "reviewed_on": "2026-11-17"
+  },
+  {
+    "spec_id": "T22",
+    "id": "sweet-spot",
+    "title": "Sweet Spot",
+    "category": "Cognitive",
+    "modes": [
+      "standard"
+    ],
+    "duration_ms": 120000,
+    "rounds": 0,
+    "score_kind": "dial_net",
+    "games": [],
+    "assessments": [],
+    "source": "https://www.tradermath.org/sweet-spot/dashboard",
+    "description": "Time clicks across several rotating dials while accounting for misses and expiry.",
+    "rules_version": "trainer-runtime-v1",
+    "content_origin": "Original practice content",
+    "proposed": "Original question bank, timing details, adaptation steps and case rubrics are versioned implementation choices where the source is silent.",
+    "reviewed_on": "2026-11-17"
+  }
+]

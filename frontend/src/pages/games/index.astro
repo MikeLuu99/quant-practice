@@ -1,0 +1,48 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { playingCard } from "../../lib/cards";
+const games = [
+  { slug: "fruit", name: "Fruit Market", type: "Mental math", level: "01 / WARM UP", duration: "5 min", desc: "Two baskets. One fair value. Keep up with the changing fruit and find your edge in the market." },
+  { slug: "math", name: "Math Challenge", type: "Speed & accuracy", level: "02 / WARM UP", duration: "5 min", desc: "Race the clock through integers, decimals, and fractions. How sharp is your mental arithmetic?" },
+  { slug: "cards", name: "Market of Cards", type: "Market making", level: "03 / STRATEGY", duration: "5–10 min", desc: "A private hand. An incomplete picture. Read the table, quote your prices, and trade the hidden total." },
+  { slug: "marble", name: "The Marble Olympics", type: "Live trading", level: "04 / CHALLENGE", duration: "1 min", desc: "Follow the score, price the final, and catch opportunities as a simulated match unfolds." },
+  { slug: "etf", name: "ETF Trading", type: "Arbitrage", level: "05 / CHALLENGE", duration: "5 min", desc: "One ETF and a basket of stocks. Spot the price mismatch and execute before the market moves." },
+  { slug: "nextcard", name: "Next Card Betting", type: "Probability", level: "06 / INTUITION", duration: "5–10 min", desc: "Higher or lower? Read the remaining deck, choose your side, and put the right amount on the line." },
+  { slug: "prob", name: "Probability Betting", type: "Probability", level: "07 / STRATEGY", duration: "5 min", desc: "Dice, coins, and cards. Decide which odds are in your favor, then size your bets with conviction." },
+  { slug: "fermi", name: "Fermi Questions", type: "Estimation", level: "08 / INTUITION", duration: "10 min", desc: "Big questions, informed guesses. Build an estimate and discover how close your intuition takes you." },
+  { slug: "makeme", name: "Make Me a Market", type: "Market making", level: "09 / STRATEGY", duration: "5 min", desc: "Make a two-sided market on an unknown fact. Manage your position, then put your book knowledge to the test." },
+];
+---
+<Layout title="Games">
+  <section class="lobby-hero">
+    <span class="eyebrow">9 games · Solo or with friends</span>
+    <h1>A little intuition.<br /><em>A lot of</em> edge.</h1>
+    <p>Nine games in probability, mental math, and market making.</p>
+    <div class="hero-footer"><a class="btn primary" href="#games">Find your game ↓</a></div>
+    <div class="hero-glitch scanlines" aria-hidden="true"></div>
+  </section>
+  <section id="games" aria-label="Choose a game">
+    <div class="catalogue-heading"><h2>The game index.</h2></div>
+    <div class="cards">
+      {games.map((g) => (
+        <a class="gcard" href={`/games/${g.slug}/`}>
+          <div class="gcard-top"><span>{g.level}</span><span>↗</span></div>
+          <div class={`game-preview preview-${g.slug}`} aria-hidden="true">
+            {g.slug === "cards" && <div class="card-hand" set:html={[{ label: "QH" }, { label: "AS" }, { label: "7D" }].map(c => playingCard(c)).join("")} />}
+            {g.slug === "nextcard" && <><span set:html={playingCard({label: "9C"})}/><span class="draw-arrow">→</span><span set:html={playingCard()}/></>}
+            {g.slug === "fruit" && <div class="preview-fruit">♧ <span>×</span> ♧<div class="preview-label">COUNT / CALCULATE / TRADE</div></div>}
+            {g.slug === "math" && <div class="preview-math">17 × 24 = ?</div>}
+            {g.slug === "marble" && <div class="mini-quote"><b>2 — 1</b><span class="preview-label">67′<br/>THE FINAL</span></div>}
+            {g.slug === "etf" && <div class="mini-chart">{[40,70,50,90,65,100,80].map(h => <i style={`height:${h}px`}/>)}</div>}
+            {g.slug === "prob" && <><span class="mini-die">⚄</span><span class="mini-die">⚂</span><span class="preview-math">?</span></>}
+            {g.slug === "fermi" && <div class="preview-math">10² · 10³ · 10⁴</div>}
+            {g.slug === "makeme" && <div class="mini-quote"><div><span class="preview-label">BID</span><br/><b>310</b></div><span>↔</span><div><span class="preview-label">ASK</span><br/><b>345</b></div></div>}
+          </div>
+          <h3 class="name">{g.name}</h3>
+          <p class="desc">{g.desc}</p>
+          <div class="meta"><span>{g.type} · {g.duration}</span><span class="play-link">Play ↗</span></div>
+        </a>
+      ))}
+    </div>
+  </section>
+</Layout>

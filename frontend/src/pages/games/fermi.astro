@@ -1,0 +1,108 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import SetupPanel from "../../components/SetupPanel.astro";
+const defaults = JSON.stringify({ rounds: 10, question_timer_ms: 60000, reveal_ms: 8000 });
+---
+<Layout title="Fermi Questions Challenge" subtitle="premium · solo or 1-300 players">
+  <h1>Fermi Questions Challenge</h1>
+  <details class="game-rules"><summary>How to play</summary><p class="rules">Make your best estimate. Submit one positive number before the deadline; your first answer is locked. The closer you are to the true answer, the more points you earn. Missing a question costs 2 points. Answers and explanations appear after each round.</p></details>
+  <SetupPanel slug="fermi" defaults={defaults} />
+</Layout>
+
+<script>
+  import { mountBoard, fmtNum, renderPlayerTable, type Controller } from "../../lib/api";
+  import { fmtClock, escapeHTML as esc } from "../../lib/logic";
+
+  mountBoard({
+    slug: "fermi",
+    defaults: { rounds: 10, question_timer_ms: 60000, reveal_ms: 8000 },
+    render(c: Controller, board: HTMLElement) {
+      const s = c.state || {};
+      let inner = `
+        <div class="row" style="justify-content:space-between">
+          <span class="badge accent">round ${s.round} / ${s.total_rounds}</span>
+          <span class="timer"><span data-clock>${fmtClock(s.time_remaining_ms ?? 0)}</span> · phase ${s.phase}</span>
+        </div>`;
+      if (s.phase === "QUESTION") {
+        const q = s.question || {};
+        const submitted = s.submitted || [];
+        inner += `
+          <div class="question-panel">
+            <div class="muted" style="font-size:16px">units: ${q.units}</div>
+            <div class="big" style="font-size:22px; font-weight:700">${q.prompt}</div>
+            <div class="row" style="justify-content:center; margin-top:12px">
+              <input ${submitted.includes(c.me) ? "disabled" : ""} id="estimate" placeholder="your estimate (positive number)" size="22" autocomplete="off" />
+              <button class="btn primary" id="submit" ${submitted.includes(c.me) ? "disabled" : ""}>${submitted.includes(c.me) ? "Estimate locked" : "Lock estimate ↗"}</button>
+            </div>
+            <div class="err" id="act-err"></div>
+            <div class="muted" style="margin-top:8px">submitted: ${submitted.length ? submitted.map(esc).join(", ") : "nobody yet"}</div>
+          </div>`;
+      } else if (s.phase === "REVEAL") {
+        const rev = s.reveal || {};
+        inner += `
+          <div class="panel">
+            <div class="badge accent">reveal</div>
+            <div style="font-weight:700; margin:6px 0">${rev.question?.prompt}</div>
+            <div class="big" style="color:var(--accent)">${fmtNum(rev.question?.answer, 4)} ${rev.question?.units}</div>
+            <div class="muted" style="margin:6px 0">${rev.question?.explanation} <span class="muted">(${rev.question?.source})</span></div>
+            <table class="tbl">
+              <thead><tr><th>player</th><th class="num">estimate</th><th class="num">error r</th><th class="num">log10 err</th><th class="num">points</th></tr></thead>
+              <tbody>
+                ${(rev.rows || []).map((r: any) => `
+                  <tr>
+                    <td>${esc(r.player)}</td>
+                    <td class="num">${r.value == null ? "— missing (-2)" : fmtNum(r.value, 4)}</td>
+                    <td class="num">${r.multiplicative_error ?? ""}</td>
+                    <td class="num">${r.log10_error ?? ""}</td>
+                    <td class="num" style="color:${r.points >= 0 ? "var(--good)" : "var(--bad)"}">${r.points}</td>
+                  </tr>`).join("")}
+              </tbody>
+            </table>
+          </div>`;
+      }
+      inner += `
+        <div class="grid3">
+          <div class="panel"><div class="muted">my points</div><div class="big" style="color:var(--accent)">${s.my_points ?? 0}</div></div>
+          <div class="panel" style="grid-column: span 2"><div class="muted">leaderboard</div>
+            ${(s.leaderboard || []).map((l: any) => `<span class="badge">${esc(l.player)}: ${l.points}</span>`).join(" ")}
+          </div>
+        </div>
+        <div class="err" id="act-err"></div>`;
+      board.innerHTML = inner;
+      if (s.phase === "QUESTION") {
+        const input = board.querySelector("#estimate") as HTMLInputElement;
+        const err = board.querySelector("#act-err")!;
+        const submit = async () => {
+          const out = await c.act("ESTIMATE", { question_id: s.question.question_id, value: Number(input.value) });
+          if (!out.accepted) {
+            err.textContent = `rejected: ${out.reason}`;
+            return;
+          }
+          await c.refresh();
+        };
+        board.querySelector("#submit")?.addEventListener("click", submit);
+        input.addEventListener("keydown", (e) => e.key === "Enter" && submit());
+
+      }
+    },
+    renderResults(c: Controller, results: any, box: HTMLElement) {
+      renderPlayerTable(box, results.players || [], [
+        ["player", "player"],
+        ["total", "total"],
+        ["rank", "rank"],
+        ["global_points", "global pts"],
+      ]);
+      const details = document.createElement("details");
+      details.className = "panel";
+      details.innerHTML = `<summary>Full reveal log (${(results.reveals || []).length} rounds)</summary>`;
+      for (const rev of results.reveals || []) {
+        const d = document.createElement("div");
+        d.style.marginTop = "10px";
+        d.innerHTML = `<b>${rev.question.prompt}</b> → <span style="color:var(--accent)">${fmtNum(rev.question.answer, 4)}</span>
+          <span class="muted">(${rev.question.explanation})</span>`;
+        details.appendChild(d);
+      }
+      box.appendChild(details);
+    },
+  });
+</script>

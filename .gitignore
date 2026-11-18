@@ -1,0 +1,17 @@
+.DS_Store
+node_modules/
+frontend/dist/
+frontend/.astro/
+backend/bin/
+worker/build/
+.cloudflare/
+.wrangler/
+.env
+.env.*
+!.env.example
+.dev.vars
+.dev.vars.*
+*.log
+coverage/
+*.cpuprofile
+worker/dist/

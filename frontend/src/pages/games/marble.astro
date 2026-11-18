@@ -1,0 +1,117 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import SetupPanel from "../../components/SetupPanel.astro";
+const defaults = JSON.stringify({ sim_duration_ms: 5400000, playback_x: 90, history_matches: 5, side_count: 6, window_step_ms: 8000, window_len_ms: 6000, main_quote_step_ms: 5000 });
+---
+<Layout title="The Marble Olympics" subtitle="premium · solo or 1-300 players">
+  <h1>The Marble Olympics</h1>
+  <details class="game-rules"><summary>How to play</summary><p class="rules">Trade a simulated football final as the goals arrive. The main contract pays the product of both teams’ final scores. Side markets open for short windows and pay 100 if the stated event happens. Use previous match scores to judge the teams and find an edge.</p></details>
+  <SetupPanel slug="marble" defaults={defaults} />
+</Layout>
+
+<script>
+  import { mountBoard, fmtNum, renderPlayerTable, type Controller } from "../../lib/api";
+  import { fmtClock } from "../../lib/logic";
+
+  mountBoard({
+    slug: "marble",
+    defaults: { sim_duration_ms: 5400000, playback_x: 90, history_matches: 5, side_count: 6, window_step_ms: 8000, window_len_ms: 6000, main_quote_step_ms: 5000 },
+    render(c: Controller, board: HTMLElement) {
+      const s = c.state || {};
+      const totals = s.totals || { A: {}, B: {} };
+      const main = s.main || {};
+      const book = s.my_book || {};
+      const open = (s.sides || []).find((m: any) => m.status === "OPEN");
+      board.innerHTML = `
+        <div class="row" style="justify-content:space-between">
+          <span class="badge accent">match clock ${((s.match_clock_game_min ?? 0)).toFixed(1)}'</span>
+          <span class="timer"><span data-clock>${fmtClock(s.time_remaining_ms ?? 0)}</span> left · quote v${s.market_version}</span>
+        </div>
+        <div class="grid3">
+          <div class="panel" style="text-align:center">
+            <div class="eyebrow">Team A / The home side</div><div class="match-score"><span class="team-marble" aria-hidden="true"></span></div>
+            <div class="big" style="color:var(--warn)">${(totals.A?.total ?? 0) || ((totals.A?.orange ?? 0) + (totals.A?.red ?? 0))}</div>
+            <div class="muted">orange ${totals.A?.orange ?? 0} · red ${totals.A?.red ?? 0}</div>
+          </div>
+          <div class="panel" style="text-align:center">
+            <div class="eyebrow">Team B / The visitors</div><div class="match-score"><span class="team-marble team-marble-b" aria-hidden="true"></span></div>
+            <div class="big" style="color:var(--accent2)">${(totals.B?.total ?? 0) || ((totals.B?.orange ?? 0) + (totals.B?.red ?? 0))}</div>
+            <div class="muted">orange ${totals.B?.orange ?? 0} · red ${totals.B?.red ?? 0}</div>
+          </div>
+          <div class="panel">
+            <div class="muted" style="font-size:16px">tournament history (evidence)</div>
+            ${(s.history || []).slice(0, 10).map((h: any, i: number) => `<span class="badge" style="margin:2px">${i % 2 === 0 ? "A" : "B"} ${h.team}-${h.opponent}</span>`).join("")}
+          </div>
+        </div>
+        <div class="grid2">
+          <div class="panel">
+            <div class="muted" style="font-size:16px">MAIN — pays (final A) x (final B)</div>
+            <div class="row" style="margin:8px 0">
+              <span class="badge bad">bid ${main.bid}</span>
+              <span class="badge good">ask ${main.ask}</span>
+              <button class="btn good sm" id="buy-main">BUY @ ${main.ask}</button>
+              <button class="btn bad sm" id="sell-main">SELL @ ${main.bid}</button>
+            </div>
+            <div class="muted" style="font-size:16px">open side market</div>
+            ${open ? `
+              <div style="margin-top:4px">
+                <b>${open.id}</b> — ${open.desc}
+                <div class="row" style="margin-top:4px">
+                  <span class="badge bad">bid ${open.bid}</span>
+                  <span class="badge good">ask ${open.ask}</span>
+                  <span class="muted">closes in ${fmtClock(open.closes_in_ms)}</span>
+                  <button class="btn good sm" id="buy-side">BUY @ ${open.ask}</button>
+                  <button class="btn bad sm" id="sell-side">SELL @ ${open.bid}</button>
+                </div>
+              </div>` : '<div class="muted" style="margin-top:4px">no side market open</div>'}
+            <div class="err" id="act-err"></div>
+          </div>
+          <div class="panel">
+            <div class="muted" style="font-size:16px">my book · edge points ${s.my_edge_points ?? 0}</div>
+            <table class="tbl">
+              <thead><tr><th>contract</th><th class="num">cash</th><th class="num">position</th></tr></thead>
+              <tbody>
+                ${Object.entries(book).map(([id, b]: any) => `<tr><td>${id}</td><td class="num">${fmtNum(b.cash)}</td><td class="num">${b.position}</td></tr>`).join("") || '<tr><td colspan="3" class="muted">no positions yet</td></tr>'}
+              </tbody>
+            </table>
+            <div class="muted" style="margin-top:6px; font-size:16px">${(s.my_trades || []).slice(-5).map((t: any) => `${t.side} ${t.contract} @ ${t.price}${t.edge_points ? ` (${t.edge_points > 0 ? "+" : ""}${t.edge_points} edge)` : ""}`).join(" · ")}</div>
+          </div>
+        </div>`;
+      const err = board.querySelector("#act-err")!;
+      const trade = async (contract: string, side: string) => {
+        const out = await c.act(side, { contract_id: contract, quantity: 1 });
+        if (!out.accepted) {
+          err.textContent = `rejected: ${out.reason}`;
+          return;
+        }
+        err.textContent = "";
+        await c.refresh();
+      };
+      board.querySelector("#buy-main")?.addEventListener("click", () => trade("MAIN", "BUY"));
+      board.querySelector("#sell-main")?.addEventListener("click", () => trade("MAIN", "SELL"));
+      if (open) {
+        board.querySelector("#buy-side")?.addEventListener("click", () => trade(open.id, "BUY"));
+        board.querySelector("#sell-side")?.addEventListener("click", () => trade(open.id, "SELL"));
+      }
+    },
+    renderResults(c: Controller, results: any, box: HTMLElement) {
+      const ft = results.final_totals || {};
+      const pay = results.payouts || {};
+      const sum = document.createElement("div");
+      sum.className = "panel";
+      sum.innerHTML = `<b>Final:</b> A ${ft.A?.total} (orange ${ft.A?.orange}, red ${ft.A?.red}) ·
+        B ${ft.B?.total} (orange ${ft.B?.orange}, red ${ft.B?.red}) ·
+        MAIN paid <b>${pay.MAIN}</b>
+        ${Object.entries(pay).filter(([k]) => k !== "MAIN").map(([k, v]) => `<span class="badge">${k}: ${v}</span>`).join(" ")}`;
+      box.appendChild(sum);
+      renderPlayerTable(box, results.players || [], [
+        ["player", "player"],
+        ["profit", "profit"],
+        ["edge_sum", "edge pts"],
+        ["rank_score", "rank score"],
+        ["rank", "rank"],
+        ["global_points", "global pts"],
+      ]);
+    },
+  });
+</script>
