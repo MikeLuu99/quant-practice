@@ -11,6 +11,8 @@
     "test:worker": "node --test worker/*.test.mjs",
     "build:staging": "bun run --cwd frontend build && npm run build:worker && vite build --mode staging",
     "build:production": "bun run --cwd frontend build && npm run build:worker && vite build --mode production",
+    "build:pages:staging": "bun run --cwd frontend build && node scripts/build-pages.mjs staging",
+    "build:pages:production": "bun run --cwd frontend build && node scripts/build-pages.mjs production",
     "test:wasm": "node --experimental-vm-modules scripts/smoke-wasm.mjs"
   },
   "devDependencies": {
