@@ -8,10 +8,18 @@ const url = new URL(base);
 if (!['https:', 'http:'].includes(url.protocol)) throw Error('QUANT_PAGES_URL must be HTTP(S)');
 
 async function get(path) {
-  const response = await fetch(new URL(path, url), { signal: AbortSignal.timeout(30000) });
-  const text = await response.text();
-  assert.equal(response.ok, true, `${path}: ${response.status} ${text.slice(0, 200)}`);
-  return text;
+  // Fresh Pages deployments briefly return transient 5xx (e.g. 522) while
+  // the project's assets sync; retry a few times before failing.
+  for (let attempt = 1; ; attempt++) {
+    const response = await fetch(new URL(path, url), { signal: AbortSignal.timeout(30000) });
+    if (response.ok) return response.text();
+    const text = await response.text();
+    if (response.status >= 500 && attempt < 6) {
+      await new Promise((r) => setTimeout(r, 5000));
+      continue;
+    }
+    throw Error(`${path}: ${response.status} ${text.slice(0, 200)}`);
+  }
 }
 
 // A freshly created project can take a few seconds to activate its pages.dev
